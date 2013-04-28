@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+   <extension-point id="org.eclipse.epp.usagedata.gathering.monitors" name="Usage Data Monitors" schema="schema/org.eclipse.epp.usagedata.gathering.monitors.exsd"/>
+   <extension-point id="org.eclipse.epp.usagedata.listeners.event" name="Event Listener" schema="schema/org.eclipse.epp.usagedata.listeners.event.exsd"/>
+   <extension
+         point="org.eclipse.ui.startup">
+      <startup
+            class="org.eclipse.epp.usagedata.internal.gathering.Startup"></startup>
+   </extension>
+   <extension
+         point="org.eclipse.epp.usagedata.gathering.monitors">
+      <monitor
+            class="org.eclipse.epp.usagedata.internal.gathering.monitors.CommandUsageMonitor">
+      </monitor>
+      
+   </extension>
+   <extension
+         point="org.eclipse.core.runtime.preferences">
+      <initializer
+            class="org.eclipse.epp.usagedata.internal.gathering.settings.UsageDataCapturePreferenceInitializer">
+      </initializer>
+   </extension>
+   <extension
+         point="org.eclipse.ui.commands">
+      <category
+            id="org.eclipse.epp.usagedata.gathering.commands.category"
+            name="Sample Category">
+      </category>
+      <command
+            categoryId="org.eclipse.epp.usagedata.gathering.commands.category"
+            id="org.eclipse.epp.usagedata.gathering.commands.sampleCommand"
+            name="Sample Command">
+      </command>
+   </extension>
+   <extension
+         point="org.eclipse.ui.handlers">
+      <handler
+            class="fatbastard.ui.command.handlers.StartExperimentCommandHandler"
+            commandId="org.eclipse.epp.usagedata.gathering.commands.sampleCommand">
+      </handler>
+   </extension>
+   <extension
+         point="org.eclipse.ui.bindings">
+      <key
+            commandId="org.eclipse.epp.usagedata.gathering.commands.sampleCommand"
+            contextId="org.eclipse.ui.contexts.window"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="M1+6">
+      </key>
+   </extension>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            locationURI="menu:org.eclipse.ui.main.menu?after=additions">
+         <menu
+               id="org.eclipse.epp.usagedata.gathering.menus.sampleMenu"
+               label="Sample Menu"
+               mnemonic="M">
+            <command
+                  commandId="org.eclipse.epp.usagedata.gathering.commands.sampleCommand"
+                  id="org.eclipse.epp.usagedata.gathering.menus.sampleCommand"
+                  mnemonic="S">
+            </command>
+         </menu>
+      </menuContribution>
+      <menuContribution
+            locationURI="toolbar:org.eclipse.ui.main.toolbar?after=additions">
+         <toolbar
+               id="org.eclipse.epp.usagedata.gathering.toolbars.sampleToolbar">
+            <command
+                  commandId="org.eclipse.epp.usagedata.gathering.commands.sampleCommand"
+                  icon="icons/sample.gif"
+                  id="org.eclipse.epp.usagedata.gathering.toolbars.sampleCommand"
+                  tooltip="Say hello world">
+            </command>
+         </toolbar>
+      </menuContribution>
+   </extension>
+
+</plugin>
