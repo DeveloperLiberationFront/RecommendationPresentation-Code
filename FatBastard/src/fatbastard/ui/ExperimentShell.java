@@ -118,6 +118,7 @@ public class ExperimentShell  {
 		holderTop.setLayout(new FillLayout());
 
 		newRecommendationList = new RecommendationList(holderTop, SWT.NONE);
+		newRecommendationList.setToolTipText("New commands will be recommended here as you complete the tasks.");
 		
 		//right bottom pane starts here
 
@@ -143,6 +144,7 @@ public class ExperimentShell  {
 		holderBottom.setLayout(new FillLayout());
 
 		oldRecommendationList = new RecommendationList(holderBottom, SWT.NONE);
+		oldRecommendationList.setToolTipText("Recommendations that you have seen will go to this list.");
 		
 		newRecommendationList.setRecommendationListener(new CommandLinkListener(){
 			@Override
@@ -155,13 +157,16 @@ public class ExperimentShell  {
 					cLink = (CommandLink) ((Label)e.widget).getParent();
 				}
 				
-				//record the click
-				Recorder recorder = Recorder.getInstance();
-				recorder.recordClick(cLink.getRecommendation());
 				
 				//open the details for the recommendation
 				RecoDetailsShell details = new RecoDetailsShell(cLink.getRecommendation(), null);
-				System.out.println(details.open());
+				boolean alreadyKnown = details.open();
+				
+				if (!alreadyKnown){
+					//record the click
+					Recorder recorder = Recorder.getInstance();
+					recorder.recordClick(cLink.getRecommendation());
+				}
 				
 				//remove recommendation from this list and put it in "seen list"
 				if (newList != null && oldList != null){
@@ -190,13 +195,15 @@ public class ExperimentShell  {
 					cLink = (CommandLink) ((Label)e.widget).getParent();
 				}
 				
-				//record the click
-				Recorder recorder = Recorder.getInstance();
-				recorder.recordClick(cLink.getRecommendation());
-				
 				//open the details for the recommendation
 				RecoDetailsShell details = new RecoDetailsShell(cLink.getRecommendation(), null);
-				System.out.println(details.open());
+				boolean alreadyKnown = details.open();
+				
+				if (!alreadyKnown){
+					//record the click
+					Recorder recorder = Recorder.getInstance();
+					recorder.recordClick(cLink.getRecommendation());
+				}
 			}});
 		
 	}

@@ -92,7 +92,6 @@ public class Recommendation implements Comparable<Recommendation> {
 					throws SAXException {
 				
 				if (goodnessStart){
-					System.out.println("reading: " + label);
 					goodness = Integer.parseInt(new String(ch, start, length));
 					goodnessStart = false;
 				}
@@ -230,7 +229,8 @@ public class Recommendation implements Comparable<Recommendation> {
 	    ArrayList<String> friends = new ArrayList<String>();
 	    String line = null;
 	    while ((line = br.readLine()) != null){
-	    	friends.add(line);
+	    	if (!line.equalsIgnoreCase(""))
+	    		friends.add(line);
 	    }
 	    br.close();
 		return friends;
