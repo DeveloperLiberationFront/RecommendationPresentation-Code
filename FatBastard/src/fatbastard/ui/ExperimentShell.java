@@ -111,7 +111,7 @@ public class ExperimentShell  {
 		
 		lblNewRecommendations = new Label(rightPaneTop, SWT.NONE);
 		lblNewRecommendations.setFont(SWTResourceManager.getFont("Lucida Grande", 16, SWT.NORMAL));
-		lblNewRecommendations.setText("New Recommendations");
+		lblNewRecommendations.setText("New Eclipse Command Recommendations");
 
 		Composite holderTop = new Composite(rightPaneTop, SWT.NONE);
 		holderTop.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
@@ -137,7 +137,7 @@ public class ExperimentShell  {
 		
 		lblOldRecommendations = new Label(rightPaneBottom, SWT.NONE);
 		lblOldRecommendations.setFont(SWTResourceManager.getFont("Lucida Grande", 16, SWT.NORMAL));
-		lblOldRecommendations.setText("Old Recommendations");
+		lblOldRecommendations.setText("Already Seen Recommendations");
 
 		Composite holderBottom = new Composite(rightPaneBottom, SWT.NONE);
 		holderBottom.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));

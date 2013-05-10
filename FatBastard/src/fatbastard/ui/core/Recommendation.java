@@ -43,11 +43,10 @@ public class Recommendation implements Comparable<Recommendation> {
 
 	@Override
 	public int compareTo(Recommendation r) {
-		if (this.equals(r)) return 0;
-		else {
-			int difference = this.goodness - r.goodness;
-			return difference == 0 ? 1 : difference; 
-		}
+		int difference = r.goodness - this.goodness;
+		if (difference == 0)
+			return this.id.compareTo(r.id);
+		else return difference;
 	}
 	
 	public Recommendation(String id) throws URISyntaxException, IOException, ParserConfigurationException, SAXException {
