@@ -12,7 +12,6 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
-import org.eclipse.ui.preferences.ScopedPreferenceStore;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
@@ -20,7 +19,12 @@ import org.xml.sax.helpers.DefaultHandler;
 import fatbastard.ui.utils.Utils;
 
 public class Recommendation implements Comparable<Recommendation> {
-
+	
+	public static final int CONDITION_NOTHING = 0;
+	public static final int CONDITION_PEOPLE_NAME = 1;
+	public static final int CONDITION_PEOPLE_NUMBER = 2;
+	public static final int CONDITION_CONFIDENCE_RATING = 3;
+	
 	private String label;
 	private int condition;
 	private String id = "";
@@ -28,6 +32,7 @@ public class Recommendation implements Comparable<Recommendation> {
 	private int goodness = 0;
 	private String conditionString;
 	private String conditionShortString;
+	private float rating;
 	
 	@Override
 	public boolean equals(Object obj) {
@@ -132,14 +137,17 @@ public class Recommendation implements Comparable<Recommendation> {
 	public void setCondition(int condition) {
 		this.condition = condition;
 		switch (condition){
-		case Utils.CONDITION_NOTHING:
+		case CONDITION_NOTHING:
 			conditionShortString = "none";
 			break;
-		case Utils.CONDITION_PEOPLE_NAME:
+		case CONDITION_PEOPLE_NAME:
 			conditionShortString = "peoplename";
 			break;
-		case Utils.CONDITION_PEOPLE_NUMBER:
+		case CONDITION_PEOPLE_NUMBER:
 			conditionShortString = "peoplenumber";
+			break;
+		case CONDITION_CONFIDENCE_RATING:
+			conditionShortString = "confidence";
 			break;
 		default:
 			conditionShortString = "";
@@ -158,14 +166,14 @@ public class Recommendation implements Comparable<Recommendation> {
 	}
 
 	private void computeCondition(){
-		int conditionTotal = (Utils.conditions[0] + Utils.conditions[1] + Utils.conditions[2]);
+		int conditionTotal = (Utils.conditions[0] + Utils.conditions[1] + Utils.conditions[2] + Utils.conditions[3]);
 		
-		if (conditionTotal % 3 == 0){
+		if (conditionTotal % 4 == 0){
 			Random generator = new Random();
 			int randomSeed = generator.nextInt(100) * generator.nextInt(100);
 			int randomInt = generator.nextInt(randomSeed + 1);
 			
-			int condition = randomInt % 3;
+			int condition = randomInt % 4;
 			
 			this.setCondition(condition);
 			Utils.conditions[condition]++;
@@ -175,16 +183,25 @@ public class Recommendation implements Comparable<Recommendation> {
 			int condition;
 			Random generator = new Random();
 			int randomInt = generator.nextInt(100);
-			randomInt = randomInt % 3;
+			randomInt = randomInt % 4;
 			
-			if(Utils.conditions[randomInt] < Utils.conditions[(randomInt + 1) % 3] && Utils.conditions[randomInt] < Utils.conditions[(randomInt + 2) % 3]){
+			if(Utils.conditions[randomInt] < Utils.conditions[(randomInt + 1) % 4] || 
+					Utils.conditions[randomInt] < Utils.conditions[(randomInt + 2) % 4] ||
+					Utils.conditions[randomInt] < Utils.conditions[(randomInt + 3) % 4]){
 			    condition = randomInt;
 			}
-			else if(Utils.conditions[(randomInt + 1) % 3] < Utils.conditions[(randomInt + 2) % 3] && Utils.conditions[(randomInt + 1) % 3] < Utils.conditions[randomInt]){
-			    condition = (randomInt + 1) % 3;
+			else if(Utils.conditions[(randomInt + 1) % 4] < Utils.conditions[(randomInt + 2) % 4] || 
+					Utils.conditions[(randomInt + 1) % 4] < Utils.conditions[(randomInt + 3) % 4] || 
+					Utils.conditions[(randomInt + 1) % 4] < Utils.conditions[randomInt]){
+			    condition = (randomInt + 1) % 4;
+			}
+			else if(Utils.conditions[(randomInt + 2) % 4] < Utils.conditions[(randomInt + 3) % 4] || 
+					Utils.conditions[(randomInt + 2) % 4] < Utils.conditions[(randomInt + 1) % 4] || 
+					Utils.conditions[(randomInt + 2) % 4] < Utils.conditions[randomInt]){
+			    condition = (randomInt + 2) % 4;
 			}
 			else{
-			    condition = (randomInt + 2) % 3;
+			    condition = (randomInt + 3) % 4;
 			}
 			this.setCondition(condition);
 			Utils.conditions[condition]++;
@@ -199,10 +216,10 @@ public class Recommendation implements Comparable<Recommendation> {
 	public void addCondition() throws URISyntaxException, IOException{
 		if (conditionString != null) return; //condition already added
 		computeCondition();
-		if (this.condition == Utils.CONDITION_NOTHING){
+		if (this.condition == CONDITION_NOTHING){
 			this.conditionString = "";
 		}
-		else if (this.condition == Utils.CONDITION_PEOPLE_NAME){
+		else if (this.condition == CONDITION_PEOPLE_NAME){
 			ArrayList<String> friends = readFriendsFile(); 
 			int size = friends.size();
 			Random random = new Random();
@@ -211,13 +228,19 @@ public class Recommendation implements Comparable<Recommendation> {
 			
 			this.conditionString = friends.get(index) + " uses this command.";
 		}
-		else if (this.condition == Utils.CONDITION_PEOPLE_NUMBER){
+		else if (this.condition == CONDITION_PEOPLE_NUMBER){
 			Random random = new Random();
 			int randomSeed = random.nextInt(100);
 			int index = random.nextInt(randomSeed + 1) % 30;
 			int number = index + 13;
 			
 			this.conditionString = number + " people use this command.";
+		}
+		else if (this.condition == CONDITION_CONFIDENCE_RATING){
+			this.conditionString = "";
+			float var = (new Random().nextInt() % 4);
+			var = (float) (var / 2 + 3.5);
+			this.rating = var;
 		}
 	}
 
@@ -237,6 +260,14 @@ public class Recommendation implements Comparable<Recommendation> {
 	
 	public String getConditionShortString() {
 		return conditionShortString;
+	}
+
+	public float getRating() {
+		return rating;
 	};
+	
+	public void setRating(float rating) {
+		this.rating = rating;
+	}
 }
 

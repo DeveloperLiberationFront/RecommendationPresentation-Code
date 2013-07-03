@@ -12,6 +12,7 @@ import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -21,6 +22,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Widget;
 
+import fatbastard.ui.StarRating.SIZE;
 import fatbastard.ui.core.Recommendation;
 
 /**
@@ -28,16 +30,17 @@ import fatbastard.ui.core.Recommendation;
  * Vista and Seven. It is composed of a green arrow, instruction and text
  */
 public class CommandLink extends Composite {
-	
+
 	private Recommendation recommendation;
-	
+
 	private Image oldImage;
 
 	private Label image;
 	private Label label;
+	private Composite composite;
 	private Label explanation;
-
-	//private final List<SelectionListener> selectionListeners;
+	private StarRating rating;
+	private Label ratingLabel;
 
 	private boolean selection;
 	private boolean insideComposite;
@@ -45,6 +48,12 @@ public class CommandLink extends Composite {
 	private boolean insideText;
 	private boolean insideInstruction;
 	private boolean mouseDown;
+	private boolean insideSmallComposite;
+	private boolean insideRating;
+	private boolean insideRatingLabel;
+
+	private float ratingValue;
+
 
 	/**
 	 * Constructs a new instance of this class given its parent and a style
@@ -58,14 +67,19 @@ public class CommandLink extends Composite {
 	 * applicable to the class. Style bits are also inherited from superclasses.
 	 * </p>
 	 * 
-	 * @param parent a widget which will be the parent of the new instance
-	 *            (cannot be null)
-	 * @param style the style of widget to construct
+	 * @param parent
+	 *            a widget which will be the parent of the new instance (cannot
+	 *            be null)
+	 * @param style
+	 *            the style of widget to construct
+	 * @param reco
 	 * 
-	 * @exception IllegalArgumentException <ul>
+	 * @exception IllegalArgumentException
+	 *                <ul>
 	 *                <li>ERROR_NULL_ARGUMENT - if the parent is null</li>
 	 *                </ul>
-	 * @exception SWTException <ul>
+	 * @exception SWTException
+	 *                <ul>
 	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
 	 *                thread that created the parent</li>
 	 *                </ul>
@@ -80,35 +94,77 @@ public class CommandLink extends Composite {
 	 * @see SWT#DOUBLE_BUFFERED
 	 * @see Widget#getStyle
 	 */
-	public CommandLink(final Composite parent, final int style) {
+	public CommandLink(final Composite parent, final int style,
+			Recommendation reco) {
 		super(parent, style);
+
+		this.setRecommendation(reco);
+		this.setRating(reco.getRating());
 
 		this.setBackgroundMode(SWT.INHERIT_DEFAULT);
 		this.setLayout(new GridLayout(2, false));
 
 		buildGreenArrow();
 		buildLabel();
-		buildExplanation();
+		buildComposite();
 		addMouseListeners();
 
-//		this.selectionListeners = new ArrayList<SelectionListener>();
 		this.addListener(SWT.Resize, new Listener() {
 			@Override
 			public void handleEvent(final Event event) {
 				drawComposite();
 			}
 		});
+
+		setConditions(recommendation);
+
 	}
-	
+
+	private void buildComposite() {
+
+		this.composite = new Composite(this, SWT.NONE);
+		this.composite.setLayoutData(new GridData(GridData.BEGINNING,
+				GridData.BEGINNING, false, true));
+		this.composite.setLayout(new FillLayout());
+
+		switch (this.recommendation.getCondition()) {
+		case Recommendation.CONDITION_CONFIDENCE_RATING:
+			buildStarRating();
+			break;
+
+		case Recommendation.CONDITION_PEOPLE_NAME:
+		case Recommendation.CONDITION_PEOPLE_NUMBER:
+		case Recommendation.CONDITION_NOTHING:
+			buildExplanation();
+			break;
+
+		default:
+			break;
+		}
+	}
+
+	private void buildStarRating() {
+
+		ratingLabel = new Label(composite, SWT.NONE);
+		ratingLabel.setText("Confidence rating of this recommendation: ");
+		this.rating = new StarRating(composite, SWT.NONE);
+
+		this.rating.setSizeOfStars(SIZE.SMALL);
+		this.rating.setMaxNumberOfStars(5);
+		this.rating.setCurrentNumberOfStars(ratingValue);
+		this.rating.setEnabled(false);
+	}
+
 	@Override
 	public int hashCode() {
 		return recommendation.hashCode();
 	}
-	
+
 	@Override
 	public boolean equals(Object obj) {
-		if (!(obj instanceof CommandLink)) return false;
-		return this.recommendation.equals(((CommandLink)obj).recommendation);
+		if (!(obj instanceof CommandLink))
+			return false;
+		return this.recommendation.equals(((CommandLink) obj).recommendation);
 	}
 
 	/**
@@ -116,9 +172,10 @@ public class CommandLink extends Composite {
 	 */
 	private void buildGreenArrow() {
 		this.image = new Label(this, SWT.NONE);
-//		this.image.setImage(SWTGraphicUtil.createImage("images/arrowGreenRight.png"));
+		// this.image.setImage(SWTGraphicUtil.createImage("images/arrowGreenRight.png"));
 		this.image.setBackground(getDisplay().getSystemColor(SWT.COLOR_WHITE));
-		this.image.setLayoutData(new GridData(GridData.CENTER, GridData.BEGINNING, false, false, 1, 2));
+		this.image.setLayoutData(new GridData(GridData.CENTER,
+				GridData.BEGINNING, false, false, 1, 2));
 	}
 
 	/**
@@ -130,7 +187,7 @@ public class CommandLink extends Composite {
 
 			@Override
 			public void widgetDisposed(final DisposeEvent e) {
-//				SWTGraphicUtil.dispose(color);
+				// SWTGraphicUtil.dispose(color);
 			}
 		});
 		this.label = new Label(this, SWT.NONE);
@@ -138,16 +195,17 @@ public class CommandLink extends Composite {
 		FontData[] fd = this.label.getFont().getFontData();
 		fd[0].setHeight(15);
 		this.label.setFont(new Font(this.getDisplay(), fd[0]));
-		this.label.setLayoutData(new GridData(GridData.BEGINNING, GridData.BEGINNING, false, false));
+		this.label.setLayoutData(new GridData(GridData.BEGINNING,
+				GridData.BEGINNING, false, false));
 	}
 
 	/**
 	 * Build the panel
 	 */
 	private void buildExplanation() {
-		this.explanation = new Label(this, SWT.NONE);
-		this.explanation.setForeground(getDisplay().getSystemColor(SWT.COLOR_BLACK));
-		this.explanation.setLayoutData(new GridData(GridData.BEGINNING, GridData.BEGINNING, false, true));
+		this.explanation = new Label(composite, SWT.NONE);
+		this.explanation.setForeground(getDisplay().getSystemColor(
+				SWT.COLOR_BLACK));
 	}
 
 	/**
@@ -161,6 +219,18 @@ public class CommandLink extends Composite {
 
 				if (event.widget.equals(CommandLink.this)) {
 					CommandLink.this.insideComposite = true;
+				}
+
+				if (event.widget.equals(CommandLink.this.composite)){
+					CommandLink.this.insideSmallComposite = true;
+				}
+
+				if (event.widget.equals(CommandLink.this.rating)){
+					CommandLink.this.insideRating = true;
+				}
+
+				if (event.widget.equals(CommandLink.this.ratingLabel)){
+					CommandLink.this.insideRatingLabel = true;
 				}
 
 				if (event.widget.equals(CommandLink.this.image)) {
@@ -185,6 +255,18 @@ public class CommandLink extends Composite {
 					CommandLink.this.insideComposite = false;
 				}
 
+				if (event.widget.equals(CommandLink.this.composite)){
+					CommandLink.this.insideSmallComposite = false;
+				}
+
+				if (event.widget.equals(CommandLink.this.rating)){
+					CommandLink.this.insideRating = false;
+				}
+
+				if (event.widget.equals(CommandLink.this.ratingLabel)){
+					CommandLink.this.insideRatingLabel = false;
+				}
+
 				if (event.widget.equals(CommandLink.this.image)) {
 					CommandLink.this.insideImage = false;
 				}
@@ -199,19 +281,19 @@ public class CommandLink extends Composite {
 		};
 
 		final MouseListener mouseListener = new MouseListener() {
-			
+
 			@Override
 			public void mouseUp(MouseEvent e) {
 				mouseDown = false;
 				drawComposite();
 			}
-			
+
 			@Override
 			public void mouseDown(MouseEvent e) {
 				mouseDown = true;
 				drawComposite();
 			}
-			
+
 			@Override
 			public void mouseDoubleClick(MouseEvent e) {
 			}
@@ -219,27 +301,51 @@ public class CommandLink extends Composite {
 
 		addListener(SWT.MouseEnter, mouseEnterListener);
 		this.image.addListener(SWT.MouseEnter, mouseEnterListener);
-		this.explanation.addListener(SWT.MouseEnter, mouseEnterListener);
+		this.composite.addListener(SWT.MouseEnter, mouseEnterListener);
 		this.label.addListener(SWT.MouseEnter, mouseEnterListener);
+		if (this.explanation != null)
+			this.explanation.addListener(SWT.MouseEnter, mouseEnterListener);
+		if (this.rating != null)
+			this.rating.addListener(SWT.MouseEnter, mouseEnterListener);
+		if (this.ratingLabel != null)
+			this.ratingLabel.addListener(SWT.MouseEnter, mouseEnterListener);
 
 		addListener(SWT.MouseExit, mouseExitListener);
 		this.image.addListener(SWT.MouseExit, mouseExitListener);
-		this.explanation.addListener(SWT.MouseExit, mouseExitListener);
+		this.composite.addListener(SWT.MouseExit, mouseExitListener);
 		this.label.addListener(SWT.MouseExit, mouseExitListener);
+		if (this.explanation != null)
+			this.explanation.addListener(SWT.MouseExit, mouseExitListener);
+		if (this.rating != null)
+			this.rating.addListener(SWT.MouseExit, mouseExitListener);
+		if (this.ratingLabel != null)
+			this.ratingLabel.addListener(SWT.MouseExit, mouseExitListener);
 
 		addMouseListener(mouseListener);
 		this.image.addMouseListener(mouseListener);
-		this.explanation.addMouseListener(mouseListener);
+		this.composite.addMouseListener(mouseListener);
 		this.label.addMouseListener(mouseListener);
-		
+		if (this.explanation != null)
+			this.explanation.addMouseListener(mouseListener);
+		if (this.rating != null)
+			this.rating.addMouseListener(mouseListener);
+		if (this.ratingLabel != null)
+			this.ratingLabel.addMouseListener(mouseListener);
+
 	}
-	
+
 	public void addCommandLinkListener(MouseListener recommendationListener) {
 		addMouseListener(recommendationListener);
 		this.image.addMouseListener(recommendationListener);
-		this.explanation.addMouseListener(recommendationListener);
+		this.composite.addMouseListener(recommendationListener);
 		this.label.addMouseListener(recommendationListener);
-		
+		if (this.explanation != null)
+			this.explanation.addMouseListener(recommendationListener);
+		if (this.rating != null)
+			this.rating.addMouseListener(recommendationListener);
+		if (this.ratingLabel != null)
+			this.ratingLabel.addMouseListener(recommendationListener);
+
 	}
 
 	/**
@@ -248,11 +354,15 @@ public class CommandLink extends Composite {
 	private void drawComposite() {
 
 		final Rectangle rect = this.getClientArea();
-		final Image newImage = new Image(getDisplay(), Math.max(1, rect.width), Math.max(1, rect.height));
+		final Image newImage = new Image(getDisplay(), Math.max(1, rect.width),
+				Math.max(1, rect.height));
 
 		final GC gc = new GC(newImage);
 
-		final boolean inside = this.insideComposite || this.insideImage || this.insideInstruction || this.insideText;
+		final boolean inside = this.insideComposite || this.insideImage
+				|| this.insideInstruction || this.insideText
+				|| this.insideRating || this.insideRatingLabel
+				|| this.insideSmallComposite;
 		final boolean mouseDown = this.mouseDown;
 
 		if (!inside && !this.selection) {
@@ -261,15 +371,20 @@ public class CommandLink extends Composite {
 			gc.drawRectangle(rect.x, rect.y, rect.width, rect.height);
 		} else {
 			// The mouse is over OR the item is selected
-			final Color gradientColor = mouseDown ? new Color(getDisplay(), 148, 173, 202) : (inside ? new Color(getDisplay(), 220, 231, 243) : new Color(getDisplay(), 241, 241, 241));
-			final Color borderColor = inside ? new Color(getDisplay(), 35, 107, 178) : new Color(getDisplay(), 192, 192, 192);
+			final Color gradientColor = mouseDown ? new Color(getDisplay(),
+					148, 173, 202) : (inside ? new Color(getDisplay(), 220,
+							231, 243) : new Color(getDisplay(), 241, 241, 241));
+			final Color borderColor = inside ? new Color(getDisplay(), 35, 107,
+					178) : new Color(getDisplay(), 192, 192, 192);
 
 			gc.setForeground(getDisplay().getSystemColor(SWT.COLOR_WHITE));
 			gc.setBackground(gradientColor);
-			gc.fillGradientRectangle(rect.x, rect.y, rect.width, rect.height, true);
+			gc.fillGradientRectangle(rect.x, rect.y, rect.width, rect.height,
+					true);
 
 			gc.setForeground(borderColor);
-			gc.drawRoundRectangle(rect.x, rect.y, rect.width - 1, rect.height - 1, 2, 2);
+			gc.drawRoundRectangle(rect.x, rect.y, rect.width - 1,
+					rect.height - 1, 2, 2);
 
 			gradientColor.dispose();
 			borderColor.dispose();
@@ -287,21 +402,21 @@ public class CommandLink extends Composite {
 	public String getLabel() {
 		return label.getText();
 	}
-	
+
 	public String getExplanation() {
 		return explanation.getText();
 	}
-	
+
 	public void setLabel(String label) {
 		this.label.setText(label);
 	}
-	
+
 	public void setExplanation(String explanation) {
 		if (explanation != null)
 			this.explanation.setText(explanation);
 	}
-	
-	public void setText(String label, String explanation){
+
+	public void setText(String label, String explanation) {
 		this.setLabel(label);
 		this.setExplanation(explanation);
 		this.redraw();
@@ -317,10 +432,22 @@ public class CommandLink extends Composite {
 
 	public void setRecommendation(Recommendation recommendation) {
 		this.recommendation = recommendation;
-		this.setText(recommendation.getLabel(), recommendation.getConditionString());
-		
+
+	}
+
+	private void setConditions(Recommendation recommendation) {
+		if (recommendation.getCondition() != Recommendation.CONDITION_CONFIDENCE_RATING)
+			this.setText(recommendation.getLabel(),
+					recommendation.getConditionString());
+		else {
+			this.setLabel(recommendation.getLabel());
+			this.setRating(recommendation.getRating());
+		}
+	}
+
+	private void setRating(float rating2) {
+		this.ratingValue = rating2;
+
 	}
 
 }
-
-

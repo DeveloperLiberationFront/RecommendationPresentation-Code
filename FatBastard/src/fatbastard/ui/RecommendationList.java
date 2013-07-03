@@ -52,9 +52,8 @@ public class RecommendationList extends ScrolledComposite  {
 	public void addRecommendation(Recommendation reco){
 
 		recommendations.add(reco);
-		CommandLink commandLink = new CommandLink(holder, SWT.NONE);
+		CommandLink commandLink = new CommandLink(holder, SWT.NONE, reco);
 		commandLink.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		commandLink.setRecommendation(reco);
 
 		if (recommendationListener != null){
 			commandLink.addCommandLinkListener(recommendationListener);

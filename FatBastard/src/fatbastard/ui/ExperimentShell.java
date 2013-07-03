@@ -4,7 +4,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.HashSet;
-import java.util.TreeSet;
 
 import javax.xml.parsers.ParserConfigurationException;
 
@@ -51,6 +50,7 @@ public class ExperimentShell  {
 	private Button btnNext;
 	private Label lblNewRecommendations;
 	private Label lblOldRecommendations;
+	private Button btnHint;
 
 	private SashForm sashForm;
 
@@ -64,6 +64,9 @@ public class ExperimentShell  {
 	private ExperimentShell(){
 	}
 
+	/**
+	 * @wbp.parser.entryPoint
+	 */
 	public void open() throws ParserConfigurationException, SAXException,
 			IOException, URISyntaxException {
 		display = PlatformUI.getWorkbench().getDisplay();
@@ -154,7 +157,21 @@ public class ExperimentShell  {
 					cLink = (CommandLink) e.widget;
 				}
 				else if (e.widget instanceof Label){
-					cLink = (CommandLink) ((Label)e.widget).getParent();
+					Composite parent = ((Label)e.widget).getParent();
+					
+					if (parent instanceof CommandLink){
+						cLink = (CommandLink)parent;
+					}
+					else {
+						cLink = (CommandLink) (parent.getParent());
+					}
+				}
+				else if (e.widget instanceof StarRating){
+					cLink = (CommandLink) ((StarRating)e.widget).getParent().getParent();
+						
+				}
+				else if (e.widget instanceof Composite){
+					cLink = (CommandLink) ((Composite)e.widget).getParent();
 				}
 				
 				
@@ -192,7 +209,21 @@ public class ExperimentShell  {
 					cLink = (CommandLink) e.widget;
 				}
 				else if (e.widget instanceof Label){
-					cLink = (CommandLink) ((Label)e.widget).getParent();
+					Composite parent = ((Label)e.widget).getParent();
+					
+					if (parent instanceof CommandLink){
+						cLink = (CommandLink)parent;
+					}
+					else {
+						cLink = (CommandLink) (parent.getParent());
+					}
+				}
+				else if (e.widget instanceof StarRating){
+					cLink = (CommandLink) ((StarRating)e.widget).getParent().getParent();
+						
+				}
+				else if (e.widget instanceof Composite){
+					cLink = (CommandLink) ((Composite)e.widget).getParent();
 				}
 				
 				//open the details for the recommendation
@@ -211,7 +242,7 @@ public class ExperimentShell  {
 	private void addLeftPane() {
 		leftPane = new Composite(shlTasksrecommendations, SWT.NONE);
 		leftPane.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 3, 1));
-		leftPane.setLayout(new GridLayout(1, true));
+		leftPane.setLayout(new GridLayout(2, true));
 
 		lblTaskNumber = new Label(leftPane, SWT.WRAP);
 		lblTaskNumber.setLayoutData(new GridData(SWT.LEFT, SWT.FILL, true, true, 1, 1));
@@ -221,8 +252,14 @@ public class ExperimentShell  {
 		lblTaskNumber.setForeground(new Color(this.display, 35, 107, 178));
 		lblTaskNumber.setText("Task 1 of 8");
 		
+		btnHint = new Button(leftPane, SWT.NONE);
+		btnHint.setLayoutData(new GridData(SWT.RIGHT, SWT.TOP, true, true, 1, 1));
+		btnHint.setText("Show Recommendations");
+		btnHint.setToolTipText("By default, recommendations for this task will be shown once you finish the task. This will use your usage data to generate recommendations");
+		btnHint.addSelectionListener(new HintButtonListener(this));
+		
 		lblThisIsA = new Label(leftPane, SWT.WRAP);
-		lblThisIsA.setLayoutData(new GridData(SWT.LEFT, SWT.FILL, true, true, 1, 1));
+		lblThisIsA.setLayoutData(new GridData(SWT.LEFT, SWT.FILL, true, true, 2, 1));
 		FontData[] fd = lblThisIsA.getFont().getFontData();
 		fd[0].setHeight(24);
 		lblThisIsA.setFont(SWTResourceManager.getFont("Lucida Grande", 18, SWT.NORMAL));
@@ -236,7 +273,7 @@ public class ExperimentShell  {
 		
 		text = new Text(leftPane, SWT.BORDER | SWT.MULTI);
 		text.setFont(SWTResourceManager.getFont("Lucida Grande", 16, SWT.NORMAL));
-		text.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		text.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
 		text.setText("Enter your answer here...");
 		text.setForeground(new Color(display, 128, 128, 128));
 		
@@ -261,9 +298,11 @@ public class ExperimentShell  {
 		});
 
 		btnNext = new Button(leftPane, SWT.NONE);
-		btnNext.setLayoutData(new GridData(SWT.RIGHT, SWT.BOTTOM, true, true, 1, 1));
+		btnNext.setLayoutData(new GridData(SWT.RIGHT, SWT.BOTTOM, true, true, 2, 1));
 		btnNext.addSelectionListener(new NextButtonListener(this));
 		btnNext.setText("Next");
+		
+		
 	}
 
 	private void customizeShell() {
@@ -283,6 +322,8 @@ public class ExperimentShell  {
 				} catch (FileNotFoundException e1) {
 					e1.printStackTrace();
 				}
+				System.out.println("Conditions: " + Utils.conditions[0] + " " + Utils.conditions[1] +
+						" " + Utils.conditions[2] + " " + Utils.conditions[3]);
 				System.out.println("Experiment Completed");
 			}
 

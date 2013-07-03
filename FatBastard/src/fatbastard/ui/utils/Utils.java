@@ -22,10 +22,6 @@ import fatbastard.ui.core.Task;
 
 public class Utils {
 
-	public static final int CONDITION_NOTHING = 0;
-	public static final int CONDITION_PEOPLE_NAME = 1;
-	public static final int CONDITION_PEOPLE_NUMBER = 2;
-	
 	public static int currentTaskNumber = 0;
 	public static HashMap<Integer, ArrayList<String>> commandUsage = new HashMap<Integer, ArrayList<String>>();
 	public static boolean experimentRunning = false;
@@ -33,16 +29,17 @@ public class Utils {
 	public static HashSet<Recommendation> allRecommendations = new HashSet<Recommendation>();
 	public static TreeSet<Recommendation> recommendationQueue = new TreeSet<Recommendation>();
 	
-	public static int conditions[] = new int[3] ;
+	public static int conditions[] = new int[4] ;
 	
 	public static void resetGlobals(){
 		conditions[0] = 0;
 		conditions[1] = 0;
 		conditions[2] = 0;
+		conditions[3] = 0;
 		
+		commandUsage.clear();
 		taskList = null;
 		experimentRunning = true;
-		commandUsage.clear();
 		currentTaskNumber = 0;
 		allRecommendations.clear();
 		recommendationQueue.clear();

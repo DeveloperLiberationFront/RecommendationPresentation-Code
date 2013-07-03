@@ -37,6 +37,7 @@ public class NextButtonListener implements SelectionListener {
 				Recommendation reco = new Recommendation(str);
 				boolean added = Utils.allRecommendations.add(reco);
 				if (added){
+//					reco.addCondition();
 					Utils.recommendationQueue.add(reco);
 				}
 			}
