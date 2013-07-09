@@ -28,6 +28,7 @@ public class Utils {
 	public static ArrayList<Task> taskList;
 	public static HashSet<Recommendation> allRecommendations = new HashSet<Recommendation>();
 	public static TreeSet<Recommendation> recommendationQueue = new TreeSet<Recommendation>();
+	public static HashSet<Recommendation> currentTaskRecos = new HashSet<Recommendation>();
 	
 	public static int conditions[] = new int[4] ;
 	
@@ -43,6 +44,7 @@ public class Utils {
 		currentTaskNumber = 0;
 		allRecommendations.clear();
 		recommendationQueue.clear();
+		currentTaskRecos.clear();
 	}
 
 	public static String getResourceFolder() throws URISyntaxException, IOException {

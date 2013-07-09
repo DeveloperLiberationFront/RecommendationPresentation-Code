@@ -8,7 +8,6 @@ import java.util.HashSet;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.FocusEvent;
@@ -49,15 +48,10 @@ public class ExperimentShell  {
 	private Text text;
 	private Button btnNext;
 	private Label lblNewRecommendations;
-	private Label lblOldRecommendations;
 	private Button btnHint;
 
-	private SashForm sashForm;
-
 	private RecommendationList newRecommendationList;
-	private RecommendationList oldRecommendationList;
 
-	private BrushedMetalComposite rightPaneBottom;
 	private Label lblYouMayEnter;
 
 
@@ -88,24 +82,16 @@ public class ExperimentShell  {
 	}
 
 	private void addRightPane() {
-		sashForm = new SashForm(shlTasksrecommendations, SWT.BORDER | SWT.VERTICAL);
-		GridData sashFormLayoutData = new GridData();
-		sashFormLayoutData.grabExcessHorizontalSpace = true;
-		sashFormLayoutData.grabExcessVerticalSpace = true;
-		sashFormLayoutData.horizontalSpan = 2;
-		sashFormLayoutData.verticalAlignment = GridData.FILL;
-		sashFormLayoutData.horizontalAlignment = SWT.FILL;
-		sashForm.setLayoutData(sashFormLayoutData);
 
 		//right top pane starts here
 
-		rightPaneTop = new BrushedMetalComposite(sashForm, SWT.NO_MERGE_PAINTS);
+		rightPaneTop = new BrushedMetalComposite(shlTasksrecommendations, SWT.NO_MERGE_PAINTS);
 
 		GridData rightPaneTopLayoutData = new GridData();
 		rightPaneTopLayoutData.grabExcessHorizontalSpace = true;
 		rightPaneTopLayoutData.widthHint = 242;
 		rightPaneTopLayoutData.grabExcessVerticalSpace = true;
-		rightPaneTopLayoutData.horizontalSpan = 1;
+		rightPaneTopLayoutData.horizontalSpan = 2;
 		rightPaneTopLayoutData.verticalAlignment = GridData.FILL;
 		rightPaneTopLayoutData.horizontalAlignment = SWT.FILL;
 
@@ -122,32 +108,6 @@ public class ExperimentShell  {
 
 		newRecommendationList = new RecommendationList(holderTop, SWT.NONE);
 		newRecommendationList.setToolTipText("New commands will be recommended here as you complete the tasks.");
-		
-		//right bottom pane starts here
-
-		rightPaneBottom = new BrushedMetalComposite(sashForm, SWT.NO_MERGE_PAINTS);
-		rightPaneBottom.setLayout(new GridLayout(1, false));
-
-		GridData rightPaneBottomLayoutData = new GridData();
-		rightPaneBottomLayoutData.grabExcessHorizontalSpace = true;
-		rightPaneBottomLayoutData.widthHint = 242;
-		rightPaneBottomLayoutData.grabExcessVerticalSpace = true;
-		rightPaneBottomLayoutData.horizontalSpan = 1;
-		rightPaneBottomLayoutData.verticalAlignment = GridData.FILL;
-		rightPaneBottomLayoutData.horizontalAlignment = SWT.FILL;
-
-		rightPaneBottom.setLayoutData(rightPaneBottomLayoutData);
-		
-		lblOldRecommendations = new Label(rightPaneBottom, SWT.NONE);
-		lblOldRecommendations.setFont(SWTResourceManager.getFont("Lucida Grande", 16, SWT.NORMAL));
-		lblOldRecommendations.setText("Already Seen Recommendations");
-
-		Composite holderBottom = new Composite(rightPaneBottom, SWT.NONE);
-		holderBottom.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		holderBottom.setLayout(new FillLayout());
-
-		oldRecommendationList = new RecommendationList(holderBottom, SWT.NONE);
-		oldRecommendationList.setToolTipText("Recommendations that you have seen will go to this list.");
 		
 		newRecommendationList.setRecommendationListener(new CommandLinkListener(){
 			@Override
@@ -174,7 +134,6 @@ public class ExperimentShell  {
 					cLink = (CommandLink) ((Composite)e.widget).getParent();
 				}
 				
-				
 				//open the details for the recommendation
 				RecoDetailsShell details = new RecoDetailsShell(cLink.getRecommendation(), null);
 				boolean alreadyKnown = details.open();
@@ -185,57 +144,16 @@ public class ExperimentShell  {
 					recorder.recordClick(cLink.getRecommendation());
 				}
 				
-				//remove recommendation from this list and put it in "seen list"
-				if (newList != null && oldList != null){
-					newList.removeRecommendation(cLink.getRecommendation());
-					oldList.addRecommendation(cLink.getRecommendation());
-				}
-				//add more recommendations to the new recommendations list, if there are any
+				/*//add more recommendations to the new recommendations list, if there are any
 				try {
 					shell.refreshRecommendationLists();
 				} catch (Exception e1) {
 					e1.printStackTrace();
-				}
+				}*/
 				
 			}
 		});
 		
-		oldRecommendationList.setRecommendationListener(new CommandLinkListener(){
-
-			@Override
-			public void mouseDown(MouseEvent e) {
-				CommandLink cLink = null;
-				if (e.widget instanceof CommandLink){
-					cLink = (CommandLink) e.widget;
-				}
-				else if (e.widget instanceof Label){
-					Composite parent = ((Label)e.widget).getParent();
-					
-					if (parent instanceof CommandLink){
-						cLink = (CommandLink)parent;
-					}
-					else {
-						cLink = (CommandLink) (parent.getParent());
-					}
-				}
-				else if (e.widget instanceof StarRating){
-					cLink = (CommandLink) ((StarRating)e.widget).getParent().getParent();
-						
-				}
-				else if (e.widget instanceof Composite){
-					cLink = (CommandLink) ((Composite)e.widget).getParent();
-				}
-				
-				//open the details for the recommendation
-				RecoDetailsShell details = new RecoDetailsShell(cLink.getRecommendation(), null);
-				boolean alreadyKnown = details.open();
-				
-				if (!alreadyKnown){
-					//record the click
-					Recorder recorder = Recorder.getInstance();
-					recorder.recordClick(cLink.getRecommendation());
-				}
-			}});
 		
 	}
 
@@ -250,12 +168,12 @@ public class ExperimentShell  {
 		fd1[0].setHeight(24);
 		lblTaskNumber.setFont(SWTResourceManager.getFont("Lucida Grande", 18, SWT.NORMAL));
 		lblTaskNumber.setForeground(new Color(this.display, 35, 107, 178));
-		lblTaskNumber.setText("Task 1 of 8");
+		lblTaskNumber.setText("Task 1 of 16   ");
 		
 		btnHint = new Button(leftPane, SWT.NONE);
 		btnHint.setLayoutData(new GridData(SWT.RIGHT, SWT.TOP, true, true, 1, 1));
 		btnHint.setText("Show Recommendations");
-		btnHint.setToolTipText("By default, recommendations for this task will be shown once you finish the task. This will use your usage data to generate recommendations");
+		btnHint.setToolTipText("Click here to view command recommendations for this task.");
 		btnHint.addSelectionListener(new HintButtonListener(this));
 		
 		lblThisIsA = new Label(leftPane, SWT.WRAP);
@@ -367,16 +285,11 @@ public class ExperimentShell  {
 		return newRecommendationList;
 	}
 	
-	public RecommendationList getOldRecoList(){
-		return oldRecommendationList;
-	}
-
 	public void refreshRecommendationLists() throws URISyntaxException, IOException {
 		HashSet<Recommendation> recos = newRecommendationList.getRecommendations();
 		int size = recos.size();
 		while (size < 10 && !Utils.recommendationQueue.isEmpty()){
 			Recommendation reco = Utils.recommendationQueue.pollFirst();
-			reco.addCondition();
 			newRecommendationList.addRecommendation(reco);
 			Recorder.getInstance().recordRecommendation(reco);
 			size++;
@@ -393,5 +306,9 @@ public class ExperimentShell  {
 
 	public void close() {
 		shlTasksrecommendations.dispose();
+	}
+
+	public void clearRecommendations() {
+		newRecommendationList.clear();
 	}
 }

@@ -28,13 +28,27 @@ public class HintButtonListener implements SelectionListener {
 		HashSet<String> taskRecommendations = task.getRecommendations();
 
 		taskRecommendations.removeAll(commandUsageHashSet);
-
+		
 		try{
 			for (String str : taskRecommendations){
 				Recommendation reco = new Recommendation(str);
-				boolean added = Utils.allRecommendations.add(reco);
+				
+				boolean alreadyThere = Utils.allRecommendations.contains(reco);
+				
+				if (!alreadyThere) {
+					reco.addCondition();
+					Utils.allRecommendations.add(reco);
+				}
+				else {
+					for (Recommendation r : Utils.allRecommendations){
+						if (r.equals(reco)){
+							reco = r;
+						}
+					}
+				}
+				
+				boolean added = Utils.currentTaskRecos.add(reco);
 				if (added){
-//					reco.addCondition();
 					Utils.recommendationQueue.add(reco);
 				}
 			}

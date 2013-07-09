@@ -22,7 +22,9 @@ public abstract class CommandLinkListener implements MouseListener {
 	public CommandLinkListener() {
 		shell = ExperimentShell.getInstance();
 		newList = shell.getNewRecoList();
-		oldList = shell.getOldRecoList();
+//		oldList = shell.getOldRecoList();
+		
+		
 	}
 	
 	@Override

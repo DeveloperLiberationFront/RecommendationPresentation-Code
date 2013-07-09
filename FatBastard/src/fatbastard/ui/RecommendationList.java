@@ -98,4 +98,15 @@ public class RecommendationList extends ScrolledComposite  {
 
 	}
 
+	public void clear() {
+		recommendations.clear();
+		for (CommandLink cl : elements) {
+			GridData clData = (GridData) cl.getLayoutData();
+			clData.exclude = true;
+			cl.dispose();
+		}
+		elements.clear();
+		
+	}
+
 }

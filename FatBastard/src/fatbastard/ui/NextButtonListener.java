@@ -31,13 +31,16 @@ public class NextButtonListener implements SelectionListener {
 		HashSet<String> taskRecommendations = task.getRecommendations();
 
 		taskRecommendations.removeAll(commandUsageHashSet);
-
-		try{
+		Utils.recommendationQueue.clear(); // added to do the second trial of the study. This trial flushes the recommendation list for every task.
+		Utils.currentTaskRecos.clear(); // added to do the second trial of the study. This trial flushes the recommendation list for every task.
+		
+		shell.clearRecommendations();
+		
+		/*try{
 			for (String str : taskRecommendations){
 				Recommendation reco = new Recommendation(str);
 				boolean added = Utils.allRecommendations.add(reco);
 				if (added){
-//					reco.addCondition();
 					Utils.recommendationQueue.add(reco);
 				}
 			}
@@ -45,7 +48,7 @@ public class NextButtonListener implements SelectionListener {
 		}
 		catch (Exception ex){
 			ex.printStackTrace();
-		}
+		}*/
 
 		//record the responses
 		Recorder.getInstance().recordResponse(shell.getText().getText());

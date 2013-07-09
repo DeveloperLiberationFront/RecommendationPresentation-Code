@@ -5,7 +5,7 @@
         
     </task>
     <task>
-        <text>Some comics are released daily, some are released weekly, and so on. What components (files/packages etc.) represent the different types of comics in the application?
+        <text>Some comics are released daily, some are released weekly, and so on. What components (files/packages etc.) represent the different types of comics in the application? Answer just by going through the file names.
 </text>
        
     </task>
@@ -37,7 +37,7 @@
         
     </task>
     <task>
-        <text>Open the file Strip.java. Find a location where an object of the class Strip is created.
+        <text>Open the file Strip.java. Find a location where an object of the class Strip is created. (Hint: The constructor is usually called to create an onject)
 </text>
         <recommendation>org.eclipse.ui.navigate.openResource</recommendation>
         <recommendation>org.eclipse.jdt.ui.navigate.open.type</recommendation>
