@@ -23,7 +23,6 @@ public class RecoDetailsShell {
 	Display display;
 	Shell shell;
 	private Recommendation recommendation;
-	boolean iAlreadyKnow = false;
 
 	public RecoDetailsShell(Recommendation recommendation, Display display) {
 		if (display == null)
@@ -32,7 +31,10 @@ public class RecoDetailsShell {
 
 	}
 
-	public boolean open(){
+	/**
+	 * @wbp.parser.entryPoint
+	 */
+	public void open(){
 		shell = new Shell(display);
 		shell.setMaximized(true);
 		shell.setText("Recommendation: " + recommendation.getLabel());
@@ -45,23 +47,6 @@ public class RecoDetailsShell {
 		Composite composite = new Composite(shell, SWT.NONE);
 		composite.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		composite.setLayout(new GridLayout(2, false));
-
-		Button btnIAlreadyKnow = new Button(composite, SWT.CHECK);
-		btnIAlreadyKnow.setBounds(0, 0, 93, 18);
-		btnIAlreadyKnow.setText("I already know this command");
-
-		btnIAlreadyKnow.addSelectionListener(new SelectionListener() {
-
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				iAlreadyKnow = ((Button) e.widget).getSelection();
-			}
-
-			@Override
-			public void widgetDefaultSelected(SelectionEvent e) {
-
-			}
-		});
 
 		Button btnClose = new Button(composite, SWT.NONE);
 		btnClose.setBounds(0, 0, 94, 28);
@@ -91,7 +76,5 @@ public class RecoDetailsShell {
 				d.sleep();
 			}
 		}
-
-		return iAlreadyKnow;
 	}
 }

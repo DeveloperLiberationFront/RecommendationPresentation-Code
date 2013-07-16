@@ -239,6 +239,7 @@ public class Recommendation implements Comparable<Recommendation> {
 		else if (this.condition == CONDITION_CONFIDENCE_RATING){
 			this.conditionString = "";
 			float var = (new Random().nextInt() % 4);
+			var = Math.abs(var);
 			var = (float) (var / 2 + 3.5);
 			this.rating = var;
 		}

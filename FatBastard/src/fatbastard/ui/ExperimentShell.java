@@ -136,20 +136,11 @@ public class ExperimentShell  {
 				
 				//open the details for the recommendation
 				RecoDetailsShell details = new RecoDetailsShell(cLink.getRecommendation(), null);
-				boolean alreadyKnown = details.open();
+				details.open();
 				
-				if (!alreadyKnown){
-					//record the click
-					Recorder recorder = Recorder.getInstance();
-					recorder.recordClick(cLink.getRecommendation());
-				}
-				
-				/*//add more recommendations to the new recommendations list, if there are any
-				try {
-					shell.refreshRecommendationLists();
-				} catch (Exception e1) {
-					e1.printStackTrace();
-				}*/
+				//record the click
+				Recorder recorder = Recorder.getInstance();
+				recorder.recordClick(Utils.currentTaskNumber, cLink.getRecommendation());
 				
 			}
 		});
@@ -239,6 +230,8 @@ public class ExperimentShell  {
 					wrapupExperiment();
 				} catch (FileNotFoundException e1) {
 					e1.printStackTrace();
+				} catch (Exception e1) {
+					e1.printStackTrace();
 				}
 				System.out.println("Conditions: " + Utils.conditions[0] + " " + Utils.conditions[1] +
 						" " + Utils.conditions[2] + " " + Utils.conditions[3]);
@@ -266,7 +259,7 @@ public class ExperimentShell  {
 		Utils.taskList = tr.getTaskList();
 	}
 
-	private void wrapupExperiment() throws FileNotFoundException {
+	private void wrapupExperiment() throws Exception {
 		Recorder.getInstance().dumpRecords();
 		Utils.experimentRunning = false;
 		
@@ -291,7 +284,7 @@ public class ExperimentShell  {
 		while (size < 10 && !Utils.recommendationQueue.isEmpty()){
 			Recommendation reco = Utils.recommendationQueue.pollFirst();
 			newRecommendationList.addRecommendation(reco);
-			Recorder.getInstance().recordRecommendation(reco);
+			Recorder.getInstance().recordRecommendation(Utils.currentTaskNumber, reco);
 			size++;
 		}
 	}

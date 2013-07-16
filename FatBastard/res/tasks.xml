@@ -37,7 +37,7 @@
         
     </task>
     <task>
-        <text>Open the file Strip.java. Find a location where an object of the class Strip is created. (Hint: The constructor is usually called to create an onject)
+        <text>Open the file Strip.java. Find a location where an object of the class Strip is created. (Hint: The constructor is usually called to create an object)
 </text>
         <recommendation>org.eclipse.ui.navigate.openResource</recommendation>
         <recommendation>org.eclipse.jdt.ui.navigate.open.type</recommendation>
@@ -139,7 +139,7 @@ Open the file BugComic.java. Notice that this file has a main method. This allow
     </task>
 
     <task>
-        <text>This is also a debugging task. Open the file GoGetARoomie.java and notice that this file has also a main method. This allows you to run/debug this file as a Java application. Run it as a Java application. The application crashes and throws a NumberFormatException on line 39. This exception is thrown if the string to be converted to integer contains characters that are not numbers. Find out the variable that of the exception.
+        <text>This is also a debugging task. Open the file GoGetARoomie.java and notice that this file has also a main method. This allows you to run/debug this file as a Java application. Run it as a Java application. The application crashes and throws a NumberFormatException on line 39. This exception is thrown if the string to be converted to integer contains characters that are not numbers. Fix the code so the exception is not thrown anymore.
 </text>
         <recommendation>org.eclipse.ui.navigate.openResource</recommendation>
         <recommendation>org.eclipse.jdt.ui.navigate.open.type</recommendation>

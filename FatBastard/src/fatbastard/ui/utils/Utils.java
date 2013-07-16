@@ -29,6 +29,8 @@ public class Utils {
 	public static HashSet<Recommendation> allRecommendations = new HashSet<Recommendation>();
 	public static TreeSet<Recommendation> recommendationQueue = new TreeSet<Recommendation>();
 	public static HashSet<Recommendation> currentTaskRecos = new HashSet<Recommendation>();
+	public static HashSet<Recommendation> filterList = new HashSet<Recommendation>();
+	public static HashMap<String, Integer> commandUsageVector = new HashMap<String, Integer>();
 	
 	public static int conditions[] = new int[4] ;
 	
@@ -42,9 +44,13 @@ public class Utils {
 		taskList = null;
 		experimentRunning = true;
 		currentTaskNumber = 0;
+		
 		allRecommendations.clear();
 		recommendationQueue.clear();
 		currentTaskRecos.clear();
+		filterList.clear();
+		commandUsageVector.clear();
+		commandUsage.clear();
 	}
 
 	public static String getResourceFolder() throws URISyntaxException, IOException {

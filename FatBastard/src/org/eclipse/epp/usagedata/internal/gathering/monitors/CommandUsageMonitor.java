@@ -80,6 +80,11 @@ public class CommandUsageMonitor implements UsageMonitor {
 			final UsageDataService usageDataService, String commandId) {
 		String bundleId = getBundleId(commandId);
 		System.out.println("Here's a command: " + commandId + " " + bundleId);
+		recordForExperiment(commandId);
+		//usageDataService.recordEvent(what, COMMAND, commandId, bundleId);
+	}
+
+	private void recordForExperiment(String commandId) {
 		if(Utils.experimentRunning){
 			if (Utils.commandUsage.get(Utils.currentTaskNumber) == null){
 				ArrayList<String> list = new ArrayList<String>();
@@ -91,8 +96,14 @@ public class CommandUsageMonitor implements UsageMonitor {
 				list.add(commandId);
 				Utils.commandUsage.put(Utils.currentTaskNumber, list);
 			}
+			
+			if (Utils.commandUsageVector.containsKey(commandId)){
+				Utils.commandUsageVector.put(commandId, (Utils.commandUsageVector.get(commandId) + 1));
+			}
+			else {
+				Utils.commandUsageVector.put(commandId, 1);
+			}
 		}
-		//usageDataService.recordEvent(what, COMMAND, commandId, bundleId);
 	}
 
 	/**
