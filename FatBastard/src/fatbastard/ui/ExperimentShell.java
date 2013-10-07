@@ -134,13 +134,14 @@ public class ExperimentShell  {
 					cLink = (CommandLink) ((Composite)e.widget).getParent();
 				}
 				
+				//record the click
+				Recorder recorder = Recorder.getInstance();
+				recorder.recordClick(Utils.currentTaskNumber, cLink.getRecommendation());
+				
 				//open the details for the recommendation
 				RecoDetailsShell details = new RecoDetailsShell(cLink.getRecommendation(), null);
 				details.open();
 				
-				//record the click
-				Recorder recorder = Recorder.getInstance();
-				recorder.recordClick(Utils.currentTaskNumber, cLink.getRecommendation());
 				
 			}
 		});

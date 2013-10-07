@@ -23,6 +23,13 @@ public class NextButtonListener implements SelectionListener {
 	@Override
 	public void widgetSelected(SelectionEvent e) {
 		
+		try {
+			Recorder.getInstance().dumpRecords();
+		} catch (Exception e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
 		//compute recommendations for the previous task
 		ArrayList<String> commandUsageArrayList = Utils.commandUsage.get(Utils.currentTaskNumber);
 		HashSet<String> commandUsageHashSet = (commandUsageArrayList == null ? new HashSet<String>() : new HashSet<String>(commandUsageArrayList));
