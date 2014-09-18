@@ -17,15 +17,16 @@ import org.eclipse.epp.usagedata.internal.gathering.services.UsageDataService;
  * notification of usage data events.
  * 
  * @author Wayne Beaton
- *
+ * 
  */
 public interface UsageDataEventListener {
 
-	/**
-	 * This method is invoked to deliver an event
-	 * to the receiver. 
-	 * 
-	 * @param event instance of {@link UsageDataEvent}.
-	 */
-	void accept(UsageDataEvent event);
+    /**
+     * This method is invoked to deliver an event
+     * to the receiver.
+     * 
+     * @param event
+     *            instance of {@link UsageDataEvent}.
+     */
+    void accept(UsageDataEvent event);
 }

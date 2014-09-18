@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.eclipse.epp.usagedata.internal.gathering.monitors;
 
-import java.io.ObjectOutputStream.PutField;
 import java.util.ArrayList;
 
 import org.eclipse.core.commands.ExecutionEvent;
@@ -29,91 +28,94 @@ import ui.utils.Utils;
  * @author Wayne Beaton
  */
 public class CommandUsageMonitor implements UsageMonitor {
-	private static final String COMMANDS_EXTENSION_POINT = "org.eclipse.ui.commands"; //$NON-NLS-1$
+    private static final String COMMANDS_EXTENSION_POINT = "org.eclipse.ui.commands"; //$NON-NLS-1$
 
-	private static final String COMMAND = "command"; //$NON-NLS-1$
-	private static final String EXECUTED = "executed"; //$NON-NLS-1$
-	private static final String FAILED = "failed"; //$NON-NLS-1$
-	private static final String NO_HANDLER = "no handler"; //$NON-NLS-1$
+    private static final String COMMAND = "command"; //$NON-NLS-1$
 
-	/**
-	 * The {@link #executionListener} is installed into the {@link ICommandService}
-	 * so that it can be notified when a command is invoked.
-	 */
-	private IExecutionListener executionListener;
+    private static final String EXECUTED = "executed"; //$NON-NLS-1$
 
-	private ExtensionIdToBundleMapper commandToBundleIdMapper;
+    private static final String FAILED = "failed"; //$NON-NLS-1$
 
-	public void startMonitoring(final UsageDataService usageDataService) {		
-		executionListener = new IExecutionListener() {
-			public void notHandled(String commandId, NotHandledException exception) {
-				recordEvent(NO_HANDLER, usageDataService, commandId);				
-			}
+    private static final String NO_HANDLER = "no handler"; //$NON-NLS-1$
 
-			public void postExecuteFailure(String commandId, ExecutionException exception) {
-				recordEvent(FAILED, usageDataService, commandId);				
-			}
+    /**
+     * The {@link #executionListener} is installed into the {@link ICommandService} so that it can be notified when a command is invoked.
+     */
+    private IExecutionListener executionListener;
 
-			public void postExecuteSuccess(String commandId, Object returnValue) {
-				recordEvent(EXECUTED, usageDataService, commandId);				
-			}
+    private ExtensionIdToBundleMapper commandToBundleIdMapper;
 
-			public void preExecute(String commandId, ExecutionEvent event) {
+    public void startMonitoring(final UsageDataService usageDataService) {
+        executionListener = new IExecutionListener() {
+            public void notHandled(String commandId, NotHandledException exception) {
+                recordEvent(NO_HANDLER, usageDataService, commandId);
+            }
 
-			}			
-		};
-		getCommandService().addExecutionListener(executionListener);
-		commandToBundleIdMapper = new ExtensionIdToBundleMapper(COMMANDS_EXTENSION_POINT);
-	}
+            public void postExecuteFailure(String commandId, ExecutionException exception) {
+                recordEvent(FAILED, usageDataService, commandId);
+            }
 
-	private ICommandService getCommandService() {
-		return (ICommandService) PlatformUI.getWorkbench().getAdapter(ICommandService.class);
-	}
+            public void postExecuteSuccess(String commandId, Object returnValue) {
+                recordEvent(EXECUTED, usageDataService, commandId);
+            }
 
-	public void stopMonitoring() {
-		ICommandService commandService = getCommandService();
-		if (commandService != null) commandService.removeExecutionListener(executionListener);
-		commandToBundleIdMapper.dispose();
-	}
+            public void preExecute(String commandId, ExecutionEvent event) {
 
-	private void recordEvent(String what,
-			final UsageDataService usageDataService, String commandId) {
-		String bundleId = getBundleId(commandId);
-		System.out.println("Here's a command: " + commandId + " " + bundleId);
-		recordForExperiment(commandId);
-		//usageDataService.recordEvent(what, COMMAND, commandId, bundleId);
-	}
+            }
+        };
+        getCommandService().addExecutionListener(executionListener);
+        commandToBundleIdMapper = new ExtensionIdToBundleMapper(COMMANDS_EXTENSION_POINT);
+    }
 
-	private void recordForExperiment(String commandId) {
-		if(Utils.experimentRunning){
-			if (Utils.commandUsage.get(Utils.currentTaskNumber) == null){
-				ArrayList<String> list = new ArrayList<String>();
-				list.add(commandId);
-				Utils.commandUsage.put(Utils.currentTaskNumber, list);
-			}
-			else{
-				ArrayList<String> list = Utils.commandUsage.get(Utils.currentTaskNumber);
-				list.add(commandId);
-				Utils.commandUsage.put(Utils.currentTaskNumber, list);
-			}
-			
-			if (Utils.commandUsageVector.containsKey(commandId)){
-				Utils.commandUsageVector.put(commandId, (Utils.commandUsageVector.get(commandId) + 1));
-			}
-			else {
-				Utils.commandUsageVector.put(commandId, 1);
-			}
-		}
-	}
+    private ICommandService getCommandService() {
+        return (ICommandService) PlatformUI.getWorkbench().getAdapter(ICommandService.class);
+    }
 
-	/**
-	 * This method fetches the bundle id (symbolic name) of the bundle that defines
-	 * the command, commandId. 
-	 * 
-	 * @param commandId
-	 * @return
-	 */
-	protected synchronized String getBundleId(String commandId) {
-		return commandToBundleIdMapper.getBundleId(commandId);
-	}
+    public void stopMonitoring() {
+        ICommandService commandService = getCommandService();
+        if (commandService != null)
+            commandService.removeExecutionListener(executionListener);
+        commandToBundleIdMapper.dispose();
+    }
+
+    private void recordEvent(String what,
+            final UsageDataService usageDataService, String commandId) {
+        String bundleId = getBundleId(commandId);
+        System.out.println("Here's a command: " + commandId + " " + bundleId);
+        recordForExperiment(commandId);
+        // usageDataService.recordEvent(what, COMMAND, commandId, bundleId);
+    }
+
+    private void recordForExperiment(String commandId) {
+        if (Utils.experimentRunning) {
+            if (Utils.commandUsage.get(Utils.currentTaskNumber) == null) {
+                ArrayList<String> list = new ArrayList<String>();
+                list.add(commandId);
+                Utils.commandUsage.put(Utils.currentTaskNumber, list);
+            }
+            else {
+                ArrayList<String> list = Utils.commandUsage.get(Utils.currentTaskNumber);
+                list.add(commandId);
+                Utils.commandUsage.put(Utils.currentTaskNumber, list);
+            }
+
+            if (Utils.commandUsageVector.containsKey(commandId)) {
+                Utils.commandUsageVector.put(commandId, (Utils.commandUsageVector.get(commandId) + 1));
+            }
+            else {
+                Utils.commandUsageVector.put(commandId, 1);
+            }
+        }
+    }
+
+    /**
+     * This method fetches the bundle id (symbolic name) of the bundle that defines
+     * the command, commandId.
+     * 
+     * @param commandId
+     * @return
+     */
+    protected synchronized String getBundleId(String commandId) {
+        return commandToBundleIdMapper.getBundleId(commandId);
+    }
 }

@@ -38,333 +38,357 @@ import org.eclipse.swt.widgets.Listener;
  */
 public class StarRating extends Canvas {
 
-	private static final int SIZE_SMALL = 16;
-	private static final int SIZE_BIG = 32;
+    private static final int SIZE_SMALL = 16;
 
-	public enum SIZE {
-		SMALL, BIG
-	};
+    private static final int SIZE_BIG = 32;
 
-	private SIZE sizeOfStars;
-	private int maxNumberOfStars;
-	private float currentNumberOfStars;
-	private static final int DEFAULT_MAX_NUMBERS_OF_STARS = 5;
-	private final List<Star> stars;
-	private int orientation;
-	private final List<SelectionListener> selectionListeners;
+    public enum SIZE {
+        SMALL, BIG
+    };
 
-	/**
-	 * Constructs a new instance of this class given its parent and a style
-	 * value describing its behavior and appearance.
-	 * <p>
-	 * The style value is either one of the style constants defined in class
-	 * <code>SWT</code> which is applicable to instances of this class, or must
-	 * be built by <em>bitwise OR</em>'ing together (that is, using the
-	 * <code>int</code> "|" operator) two or more of those <code>SWT</code>
-	 * style constants. The class description lists the style constants that are
-	 * applicable to the class. Style bits are also inherited from superclasses.
-	 * </p>
-	 * 
-	 * @param parent a composite control which will be the parent of the new
-	 *            instance (cannot be null)
-	 * @param style the style of control to construct
-	 * 
-	 * @exception IllegalArgumentException <ul>
-	 *                <li>ERROR_NULL_ARGUMENT - if the parent is null</li>
-	 *                </ul>
-	 * @exception SWTException <ul>
-	 *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
-	 *                thread that created the parent</li>
-	 *                </ul>
-	 * 
-	 */
-	public StarRating(final Composite parent, final int style) {
-		super(parent, checkStyle(style) | SWT.DOUBLE_BUFFERED);
-		sizeOfStars = SIZE.SMALL;
-		currentNumberOfStars = 0;
+    private SIZE sizeOfStars;
 
-		if ((style & SWT.VERTICAL) != 0) {
-			orientation = SWT.VERTICAL;
-		} else {
-			orientation = SWT.HORIZONTAL;
-		}
+    private int maxNumberOfStars;
 
-		stars = new ArrayList<Star>();
-		selectionListeners = new ArrayList<SelectionListener>();
-		setMaxNumberOfStars(DEFAULT_MAX_NUMBERS_OF_STARS);
-		initListeners();
-	}
+    private float currentNumberOfStars;
 
-	private static int checkStyle(int style) {
-		if ((style & SWT.VERTICAL) != 0) {
-			style = style & ~SWT.VERTICAL;
-		}
+    private static final int DEFAULT_MAX_NUMBERS_OF_STARS = 5;
 
-		if ((style & SWT.HORIZONTAL) != 0) {
-			style = style & ~SWT.HORIZONTAL;
-		}
-		return style;
-	}
+    private final List<Star> stars;
 
-	private void initListeners() {
-		final Listener listener = new Listener() {
-			@Override
-			public void handleEvent(final Event event) {
-				switch (event.type) {
-					case SWT.Paint:
-						onMousePaint(event);
-						break;
-					case SWT.Dispose:
-						onDispose(event);
-						break;
-				}
-			}
-		};
+    private int orientation;
 
-		final int[] events = new int[] { SWT.Paint, SWT.Dispose };
-		for (final int event : events) {
-			addListener(event, listener);
-		}
-	}
+    private final List<SelectionListener> selectionListeners;
 
-	
-	private void onMousePaint(final Event event) {
-		final GC gc = event.gc;
-		int x = 0, y = 0;
+    /**
+     * Constructs a new instance of this class given its parent and a style
+     * value describing its behavior and appearance.
+     * <p>
+     * The style value is either one of the style constants defined in class <code>SWT</code> which is applicable to instances of this class, or must be built by
+     * <em>bitwise OR</em>'ing together (that is, using the <code>int</code> "|" operator) two or more of those <code>SWT</code> style constants. The class description lists the
+     * style constants that are applicable to the class. Style bits are also inherited from superclasses.
+     * </p>
+     * 
+     * @param parent
+     *            a composite control which will be the parent of the new
+     *            instance (cannot be null)
+     * @param style
+     *            the style of control to construct
+     * 
+     * @exception IllegalArgumentException
+     *                <ul>
+     *                <li>ERROR_NULL_ARGUMENT - if the parent is null</li>
+     *                </ul>
+     * @exception SWTException
+     *                <ul>
+     *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the parent</li>
+     *                </ul>
+     * 
+     */
+    public StarRating(final Composite parent, final int style) {
+        super(parent, checkStyle(style) | SWT.DOUBLE_BUFFERED);
+        sizeOfStars = SIZE.SMALL;
+        currentNumberOfStars = 0;
 
-		for (final Star star : stars) {
-			star.draw(gc, x, y);
-			if (orientation == SWT.VERTICAL) {
-				y += sizeOfStars.equals(SIZE.BIG) ? SIZE_BIG : SIZE_SMALL;
-			} else {
-				x += sizeOfStars.equals(SIZE.BIG) ? SIZE_BIG : SIZE_SMALL;
-			}
-		}
-	}
+        if ((style & SWT.VERTICAL) != 0) {
+            orientation = SWT.VERTICAL;
+        } else {
+            orientation = SWT.HORIZONTAL;
+        }
 
-	private void onDispose(final Event event) {
-		for (final Star star : stars) {
-			star.dispose();
-		}
-	}
+        stars = new ArrayList<Star>();
+        selectionListeners = new ArrayList<SelectionListener>();
+        setMaxNumberOfStars(DEFAULT_MAX_NUMBERS_OF_STARS);
+        initListeners();
+    }
 
-	/**
-	 * Adds the listener to the collection of listeners who will be notified when the control 
-	 * is selected by the user, by sending it one of the messages defined in the 
-	 * <code>SelectionListener</code> interface.
-	 * <p>
-	 * <code>widgetDefaultSelected</code> is not called.
-	 * </p>
-	 * 
-	 * @param listener the listener which should be notified when the control is selected by the user,
-	 * 
-	 * @exception IllegalArgumentException <ul>
-	 *     <li>ERROR_NULL_ARGUMENT - if the listener is null</li>
-	 * </ul>
-	 * @exception SWTException <ul>
-	 *     <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
-	 *     <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
-	 * </ul>
-	 * 
-	 * @see SelectionListener
-	 * @see #removeSelectionListener
-	 * @see SelectionEvent
-	 */
-	public void addSelectionListener(final SelectionListener listener) {
-		checkWidget();
-		if (listener == null) {
-			SWT.error(SWT.ERROR_NULL_ARGUMENT);
-		}
-		this.selectionListeners.add(listener);
-	}
+    private static int checkStyle(int style) {
+        if ((style & SWT.VERTICAL) != 0) {
+            style = style & ~SWT.VERTICAL;
+        }
 
-	/**
-	 * @see org.eclipse.swt.widgets.Composite#computeSize(int, int, boolean)
-	 */
-	@Override
-	public Point computeSize(final int wHint, final int hHint, final boolean changed) {
-		if (orientation == SWT.VERTICAL) {
-			return computeSizeVertical();
-		}
-		return computeSizeHorizontal();
-	}
+        if ((style & SWT.HORIZONTAL) != 0) {
+            style = style & ~SWT.HORIZONTAL;
+        }
+        return style;
+    }
 
-	private Point computeSizeVertical() {
-		final int width = sizeOfStars.equals(SIZE.BIG) ? SIZE_BIG : SIZE_SMALL;
-		final int height = maxNumberOfStars * width;
-		return new Point(width + getBorderWidth() * 2, height + getBorderWidth() * 2);
-	}
+    private void initListeners() {
+        final Listener listener = new Listener() {
+            @Override
+            public void handleEvent(final Event event) {
+                switch (event.type) {
+                case SWT.Paint:
+                    onMousePaint(event);
+                    break;
+                case SWT.Dispose:
+                    onDispose(event);
+                    break;
+                }
+            }
+        };
 
-	private Point computeSizeHorizontal() {
-		final int height = sizeOfStars.equals(SIZE.BIG) ? SIZE_BIG : SIZE_SMALL;
-		final int width = maxNumberOfStars * height;
-		return new Point(width + getBorderWidth() * 2, height + getBorderWidth() * 2);
-	}
+        final int[] events = new int[] { SWT.Paint, SWT.Dispose };
+        for (final int event : events) {
+            addListener(event, listener);
+        }
+    }
 
-	/**
-	 * @return the number of selected stars
-	 * 
-	 * @exception SWTException <ul>
-	 *     <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
-	 *     <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
-	 * </ul>
-	 *
-	 */
-	public float getCurrentNumberOfStars() {
-		checkWidget();
-		return currentNumberOfStars;
-	}
+    private void onMousePaint(final Event event) {
+        final GC gc = event.gc;
+        int x = 0, y = 0;
 
-	/**
-	 * @return the maximum number of stars that is displayed by this component
-	 * 
-	 * @exception SWTException <ul>
-	 *     <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
-	 *     <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
-	 * </ul>
-	 *
-	 */
-	public int getMaxNumberOfStars() {
-		checkWidget();
-		return maxNumberOfStars;
-	}
+        for (final Star star : stars) {
+            star.draw(gc, x, y);
+            if (orientation == SWT.VERTICAL) {
+                y += sizeOfStars.equals(SIZE.BIG) ? SIZE_BIG : SIZE_SMALL;
+            } else {
+                x += sizeOfStars.equals(SIZE.BIG) ? SIZE_BIG : SIZE_SMALL;
+            }
+        }
+    }
 
-	/**
-	 * @return the orientation of this widget (SWT.VERTICAL or SWT.HORIZONTAL)
-	 * 
-	 * @exception SWTException <ul>
-	 *     <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
-	 *     <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
-	 * </ul>
-	 *
-	 */
-	public int getOrientation() {
-		checkWidget();
-		return orientation;
-	}
+    private void onDispose(final Event event) {
+        for (final Star star : stars) {
+            star.dispose();
+        }
+    }
 
-	/**
-	 * @return the size of stars
-	 * 
-	 * @exception SWTException <ul>
-	 *     <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
-	 *     <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
-	 * </ul>
-	 *
-	 */
-	public SIZE getSizeOfStars() {
-		checkWidget();
-		return sizeOfStars;
-	}
+    /**
+     * Adds the listener to the collection of listeners who will be notified when the control
+     * is selected by the user, by sending it one of the messages defined in the <code>SelectionListener</code> interface.
+     * <p>
+     * <code>widgetDefaultSelected</code> is not called.
+     * </p>
+     * 
+     * @param listener
+     *            the listener which should be notified when the control is selected by the user,
+     * 
+     * @exception IllegalArgumentException
+     *                <ul>
+     *                <li>ERROR_NULL_ARGUMENT - if the listener is null</li>
+     *                </ul>
+     * @exception SWTException
+     *                <ul>
+     *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
+     *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
+     *                </ul>
+     * 
+     * @see SelectionListener
+     * @see #removeSelectionListener
+     * @see SelectionEvent
+     */
+    public void addSelectionListener(final SelectionListener listener) {
+        checkWidget();
+        if (listener == null) {
+            SWT.error(SWT.ERROR_NULL_ARGUMENT);
+        }
+        this.selectionListeners.add(listener);
+    }
 
-	/**
-	 * Removes the listener from the collection of listeners who will be notified when the 
-	 * control is selected by the user.
-	 * 
-	 * @param listener the listener which should no longer be notified
-	 * 
-	 * @exception IllegalArgumentException <ul>
-	 *     <li>ERROR_NULL_ARGUMENT - if the listener is null</li>
-	 * </ul>
-	 * @exception SWTException <ul>
-	 *     <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
-	 *     <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
-	 * </ul>
-	 * 
-	 * @see SelectionListener
-	 * @see #addSelectionListener
-	 */
-	public void removeSelectionListener(final SelectionListener listener) {
-		checkWidget();
-		if (listener == null) {
-			SWT.error(SWT.ERROR_NULL_ARGUMENT);
-		}
-		this.selectionListeners.remove(listener);
-	}
+    /**
+     * @see org.eclipse.swt.widgets.Composite#computeSize(int, int, boolean)
+     */
+    @Override
+    public Point computeSize(final int wHint, final int hHint, final boolean changed) {
+        if (orientation == SWT.VERTICAL) {
+            return computeSizeVertical();
+        }
+        return computeSizeHorizontal();
+    }
 
-	/**
-	 * Set the current number of stars
-	 * 
-	 * @param currentNumberOfStars current number of stars
-	 * 
-	 * @exception IllegalArgumentException <ul>
-	 *     <li>ERROR_INVALID_ARGUMENT - if the number of star is negative or greater than the maximum number of stars</li>
-	 * </ul>
-	 * @exception SWTException <ul>
-	 *     <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
-	 *     <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
-	 * </ul>
-	 *
-	 */
-	public void setCurrentNumberOfStars(final float currentNumberOfStars) {
-		checkWidget();
-		if (currentNumberOfStars < 0 || currentNumberOfStars > maxNumberOfStars) {
-			SWT.error(SWT.ERROR_INVALID_ARGUMENT);
-		}
-		this.currentNumberOfStars = currentNumberOfStars;
-		for (final Star star : stars) {
-			star.marked = false;
-		}
+    private Point computeSizeVertical() {
+        final int width = sizeOfStars.equals(SIZE.BIG) ? SIZE_BIG : SIZE_SMALL;
+        final int height = maxNumberOfStars * width;
+        return new Point(width + getBorderWidth() * 2, height + getBorderWidth() * 2);
+    }
 
-		for (int i = 0; i < Math.floor(currentNumberOfStars); i++) {
-			stars.get(i).marked = true;
-		}
-		if (Math.ceil(currentNumberOfStars) != currentNumberOfStars){
-			stars.get((int)Math.ceil(currentNumberOfStars) - 1).marked = true;
-			stars.get((int)Math.ceil(currentNumberOfStars) - 1).halfstar = true;
-		}
-		
-	}
+    private Point computeSizeHorizontal() {
+        final int height = sizeOfStars.equals(SIZE.BIG) ? SIZE_BIG : SIZE_SMALL;
+        final int width = maxNumberOfStars * height;
+        return new Point(width + getBorderWidth() * 2, height + getBorderWidth() * 2);
+    }
 
-	/**
-	 * Set the maximum number of stars
-	 * 
-	 * @param currentNumberOfStars current number of stars
-	 * 
-	 * @exception SWTException <ul>
-	 *     <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
-	 *     <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
-	 * </ul>
-	 *
-	 */
-	public void setMaxNumberOfStars(final int maxNumberOfStars) {
-		this.maxNumberOfStars = maxNumberOfStars;
-		reinitStars();
-	}
+    /**
+     * @return the number of selected stars
+     * 
+     * @exception SWTException
+     *                <ul>
+     *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
+     *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
+     *                </ul>
+     * 
+     */
+    public float getCurrentNumberOfStars() {
+        checkWidget();
+        return currentNumberOfStars;
+    }
 
-	private void reinitStars() {
-		for (final Star star : stars) {
-			star.dispose();
-		}
-		stars.clear();
-		for (int i = 0; i < maxNumberOfStars; i++) {
-			if (sizeOfStars.equals(SIZE.BIG)) {
-				stars.add(Star.initBig(this));
-			} else {
-				stars.add(Star.initSmall(this));
-			}
-		}
+    /**
+     * @return the maximum number of stars that is displayed by this component
+     * 
+     * @exception SWTException
+     *                <ul>
+     *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
+     *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
+     *                </ul>
+     * 
+     */
+    public int getMaxNumberOfStars() {
+        checkWidget();
+        return maxNumberOfStars;
+    }
 
-	}
+    /**
+     * @return the orientation of this widget (SWT.VERTICAL or SWT.HORIZONTAL)
+     * 
+     * @exception SWTException
+     *                <ul>
+     *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
+     *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
+     *                </ul>
+     * 
+     */
+    @Override
+    public int getOrientation() {
+        checkWidget();
+        return orientation;
+    }
 
-	/**
-	 * Set the current size of stars
-	 * 
-	 * @param sizeOfStars current number of stars
-	 * 
-	 * @exception IllegalArgumentException <ul>
-	 *     <li>ERROR_INVALID_ARGUMENT - if the number of star is negative or greater than the maximum number of stars</li>
-	 * </ul>
-	 * @exception SWTException <ul>
-	 *     <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
-	 *     <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
-	 * </ul>
-	 *
-	 */
-	public void setSizeOfStars(final SIZE sizeOfStars) {
-		checkWidget();
-		this.sizeOfStars = sizeOfStars;
-		reinitStars();
-	}
+    /**
+     * @return the size of stars
+     * 
+     * @exception SWTException
+     *                <ul>
+     *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
+     *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
+     *                </ul>
+     * 
+     */
+    public SIZE getSizeOfStars() {
+        checkWidget();
+        return sizeOfStars;
+    }
+
+    /**
+     * Removes the listener from the collection of listeners who will be notified when the
+     * control is selected by the user.
+     * 
+     * @param listener
+     *            the listener which should no longer be notified
+     * 
+     * @exception IllegalArgumentException
+     *                <ul>
+     *                <li>ERROR_NULL_ARGUMENT - if the listener is null</li>
+     *                </ul>
+     * @exception SWTException
+     *                <ul>
+     *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
+     *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
+     *                </ul>
+     * 
+     * @see SelectionListener
+     * @see #addSelectionListener
+     */
+    public void removeSelectionListener(final SelectionListener listener) {
+        checkWidget();
+        if (listener == null) {
+            SWT.error(SWT.ERROR_NULL_ARGUMENT);
+        }
+        this.selectionListeners.remove(listener);
+    }
+
+    /**
+     * Set the current number of stars
+     * 
+     * @param currentNumberOfStars
+     *            current number of stars
+     * 
+     * @exception IllegalArgumentException
+     *                <ul>
+     *                <li>ERROR_INVALID_ARGUMENT - if the number of star is negative or greater than the maximum number of stars</li>
+     *                </ul>
+     * @exception SWTException
+     *                <ul>
+     *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
+     *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
+     *                </ul>
+     * 
+     */
+    public void setCurrentNumberOfStars(final float currentNumberOfStars) {
+        checkWidget();
+        if (currentNumberOfStars < 0 || currentNumberOfStars > maxNumberOfStars) {
+            SWT.error(SWT.ERROR_INVALID_ARGUMENT);
+        }
+        this.currentNumberOfStars = currentNumberOfStars;
+        for (final Star star : stars) {
+            star.marked = false;
+        }
+
+        for (int i = 0; i < Math.floor(currentNumberOfStars); i++) {
+            stars.get(i).marked = true;
+        }
+        if (Math.ceil(currentNumberOfStars) != currentNumberOfStars) {
+            stars.get((int) Math.ceil(currentNumberOfStars) - 1).marked = true;
+            stars.get((int) Math.ceil(currentNumberOfStars) - 1).halfstar = true;
+        }
+
+    }
+
+    /**
+     * Set the maximum number of stars
+     * 
+     * @param currentNumberOfStars
+     *            current number of stars
+     * 
+     * @exception SWTException
+     *                <ul>
+     *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
+     *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
+     *                </ul>
+     * 
+     */
+    public void setMaxNumberOfStars(final int maxNumberOfStars) {
+        this.maxNumberOfStars = maxNumberOfStars;
+        reinitStars();
+    }
+
+    private void reinitStars() {
+        for (final Star star : stars) {
+            star.dispose();
+        }
+        stars.clear();
+        for (int i = 0; i < maxNumberOfStars; i++) {
+            if (sizeOfStars.equals(SIZE.BIG)) {
+                stars.add(Star.initBig(this));
+            } else {
+                stars.add(Star.initSmall(this));
+            }
+        }
+
+    }
+
+    /**
+     * Set the current size of stars
+     * 
+     * @param sizeOfStars
+     *            current number of stars
+     * 
+     * @exception IllegalArgumentException
+     *                <ul>
+     *                <li>ERROR_INVALID_ARGUMENT - if the number of star is negative or greater than the maximum number of stars</li>
+     *                </ul>
+     * @exception SWTException
+     *                <ul>
+     *                <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
+     *                <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
+     *                </ul>
+     * 
+     */
+    public void setSizeOfStars(final SIZE sizeOfStars) {
+        checkWidget();
+        this.sizeOfStars = sizeOfStars;
+        reinitStars();
+    }
 
 }

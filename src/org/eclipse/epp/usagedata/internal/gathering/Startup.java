@@ -14,8 +14,8 @@ import org.eclipse.ui.IStartup;
 
 public class Startup implements IStartup {
 
-	public void earlyStartup() {
-		// Nothing to do. We just want the bundle to start.
-	}
+    public void earlyStartup() {
+        // Nothing to do. We just want the bundle to start.
+    }
 
 }

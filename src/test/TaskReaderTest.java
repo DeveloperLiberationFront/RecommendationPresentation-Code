@@ -17,19 +17,19 @@ import ui.core.TaskReader;
 
 public class TaskReaderTest {
 
-	TaskReader tr;
-	
-	@Before
-	public void initialize() throws ParserConfigurationException, SAXException{
-		tr = new TaskReader();
-	}
-	
-	@Test
-	public void testGetTaskList() throws SAXException, IOException, URISyntaxException{
-		ArrayList<Task> taskList = tr.getTaskList();
-		
-		assertEquals("passed", 7, taskList.size());	
-		
-	}
-	
+    TaskReader tr;
+
+    @Before
+    public void initialize() throws ParserConfigurationException, SAXException {
+        tr = new TaskReader();
+    }
+
+    @Test
+    public void testGetTaskList() throws SAXException, IOException, URISyntaxException {
+        ArrayList<Task> taskList = tr.getTaskList();
+
+        assertEquals("passed", 7, taskList.size());
+
+    }
+
 }

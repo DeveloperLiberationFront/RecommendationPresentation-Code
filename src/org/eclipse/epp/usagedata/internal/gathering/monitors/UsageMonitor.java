@@ -14,8 +14,8 @@ import org.eclipse.epp.usagedata.internal.gathering.services.UsageDataService;
 
 public interface UsageMonitor {
 
-	public abstract void startMonitoring(UsageDataService usageDataService);
+    public abstract void startMonitoring(UsageDataService usageDataService);
 
-	public abstract void stopMonitoring();
+    public abstract void stopMonitoring();
 
 }

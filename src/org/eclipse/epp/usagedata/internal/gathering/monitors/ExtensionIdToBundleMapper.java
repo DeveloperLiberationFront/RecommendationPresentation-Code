@@ -27,75 +27,76 @@ import org.eclipse.core.runtime.Platform;
  * is assumed that all extensions have an &quot;id&quot; attribute
  * that is used for the mapping.
  * <p>
- * The instance will rebuild its cache when the extension registry
- * detects a change to the extension point (i.e. when bundles are
- * added or removed).
+ * The instance will rebuild its cache when the extension registry detects a change to the extension point (i.e. when bundles are added or removed).
  * </p>
  * 
  * @author Wayne Beaton
- *
+ * 
  */
 public class ExtensionIdToBundleMapper {
-	private Map<String, String> map;
-	private final String extensionPointId;
-	private IRegistryChangeListener listener = new IRegistryChangeListener() {
-		public void registryChanged(IRegistryChangeEvent event) {
-			if (extensionsAdded(event)) {
-				clearCache();
-			}
-		}
+    private Map<String, String> map;
 
-		private boolean extensionsAdded(IRegistryChangeEvent event) {
-			for (IExtensionDelta delta : event.getExtensionDeltas()) {
-				if (delta.getExtensionPoint().getUniqueIdentifier().equals(extensionPointId))
-					return true;
-			}
-			return false;
-		}
-	};
+    private final String extensionPointId;
 
-	public ExtensionIdToBundleMapper(String extensionPointId) {
-		this.extensionPointId = extensionPointId;
-		hookListeners();
-	}
-	
-	void hookListeners() {
-		Platform.getExtensionRegistry().addRegistryChangeListener(listener);
-	}
-	
-	public void dispose() {
-		Platform.getExtensionRegistry().removeRegistryChangeListener(listener);
-		clearCache();
-	}		
-	
-	/**
-	 * This method fetches the bundle that defines the extension, extensionId.
-	 * Since extensions are defined in the plugin.xml, the bundle that defines
-	 * it must be a singleton which means that there will only be one version of
-	 * the bundle loaded. Happy day.
-	 * 
-	 * @param extensionId
-	 * @return
-	 */
-	protected synchronized String getBundleId(String extensionId) {
-		updateCommandToBundleMappings();
-		return map.get(extensionId);
-	}
+    private IRegistryChangeListener listener = new IRegistryChangeListener() {
+        public void registryChanged(IRegistryChangeEvent event) {
+            if (extensionsAdded(event)) {
+                clearCache();
+            }
+        }
 
-	private synchronized void clearCache() {
-		map = null;		
-	}
-	
-	/**
-	 * This method walks through the commands registered via the extension registry
-	 * and creates the {@link #map}.
-	 */
-	private synchronized void updateCommandToBundleMappings() {
-		if (map != null) return;
-		map = new HashMap<String, String>();
-		IConfigurationElement[] elements = Platform.getExtensionRegistry().getConfigurationElementsFor(extensionPointId);
-		for (IConfigurationElement element : elements) {
-			map.put(element.getAttribute("id"), element.getContributor().getName()); //$NON-NLS-1$
-		}
-	}
+        private boolean extensionsAdded(IRegistryChangeEvent event) {
+            for (IExtensionDelta delta : event.getExtensionDeltas()) {
+                if (delta.getExtensionPoint().getUniqueIdentifier().equals(extensionPointId))
+                    return true;
+            }
+            return false;
+        }
+    };
+
+    public ExtensionIdToBundleMapper(String extensionPointId) {
+        this.extensionPointId = extensionPointId;
+        hookListeners();
+    }
+
+    void hookListeners() {
+        Platform.getExtensionRegistry().addRegistryChangeListener(listener);
+    }
+
+    public void dispose() {
+        Platform.getExtensionRegistry().removeRegistryChangeListener(listener);
+        clearCache();
+    }
+
+    /**
+     * This method fetches the bundle that defines the extension, extensionId.
+     * Since extensions are defined in the plugin.xml, the bundle that defines
+     * it must be a singleton which means that there will only be one version of
+     * the bundle loaded. Happy day.
+     * 
+     * @param extensionId
+     * @return
+     */
+    protected synchronized String getBundleId(String extensionId) {
+        updateCommandToBundleMappings();
+        return map.get(extensionId);
+    }
+
+    private synchronized void clearCache() {
+        map = null;
+    }
+
+    /**
+     * This method walks through the commands registered via the extension registry
+     * and creates the {@link #map}.
+     */
+    private synchronized void updateCommandToBundleMappings() {
+        if (map != null)
+            return;
+        map = new HashMap<String, String>();
+        IConfigurationElement[] elements = Platform.getExtensionRegistry().getConfigurationElementsFor(extensionPointId);
+        for (IConfigurationElement element : elements) {
+            map.put(element.getAttribute("id"), element.getContributor().getName()); //$NON-NLS-1$
+        }
+    }
 }

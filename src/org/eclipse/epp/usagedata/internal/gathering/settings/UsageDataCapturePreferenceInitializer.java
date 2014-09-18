@@ -14,14 +14,13 @@ import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
 import org.eclipse.epp.usagedata.internal.gathering.UsageDataCaptureActivator;
 import org.eclipse.jface.preference.IPreferenceStore;
 
-
 public class UsageDataCapturePreferenceInitializer extends AbstractPreferenceInitializer {
 
-	@Override
-	public void initializeDefaultPreferences() {
-		IPreferenceStore preferenceStore = UsageDataCaptureActivator.getDefault().getPreferenceStore();
-		preferenceStore.setDefault(UsageDataCaptureSettings.CAPTURE_ENABLED_KEY, true);
-		preferenceStore.setDefault(UsageDataCaptureSettings.USER_ACCEPTED_TERMS_OF_USE_KEY, false);
-	}
+    @Override
+    public void initializeDefaultPreferences() {
+        IPreferenceStore preferenceStore = UsageDataCaptureActivator.getDefault().getPreferenceStore();
+        preferenceStore.setDefault(UsageDataCaptureSettings.CAPTURE_ENABLED_KEY, true);
+        preferenceStore.setDefault(UsageDataCaptureSettings.USER_ACCEPTED_TERMS_OF_USE_KEY, false);
+    }
 
 }
