@@ -21,7 +21,7 @@ import org.eclipse.epp.usagedata.internal.gathering.services.UsageDataService;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
 
-import fatbastard.ui.utils.Utils;
+import ui.utils.Utils;
 
 /**
  * Instances of this class monitor invocations of commands in the workbench.

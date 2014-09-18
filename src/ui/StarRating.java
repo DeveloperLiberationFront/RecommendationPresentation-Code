@@ -8,7 +8,7 @@
  * Contributors:
  *     Laurent CARON (laurent.caron@gmail.com) - initial API and implementation
  *******************************************************************************/
-package fatbastard.ui;
+package ui;
 
 import java.util.ArrayList;
 import java.util.List;

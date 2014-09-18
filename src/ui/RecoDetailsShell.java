@@ -1,4 +1,4 @@
-package fatbastard.ui;
+package ui;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
@@ -16,7 +16,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.wb.swt.SWTResourceManager;
 
-import fatbastard.ui.core.Recommendation;
+import ui.core.Recommendation;
 
 public class RecoDetailsShell {
 

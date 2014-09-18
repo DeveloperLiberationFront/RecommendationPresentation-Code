@@ -13,9 +13,9 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.xml.sax.SAXException;
 
-import fatbastard.ui.CommandLink;
-import fatbastard.ui.RecommendationList;
-import fatbastard.ui.core.Recommendation;
+import ui.CommandLink;
+import ui.RecommendationList;
+import ui.core.Recommendation;
 
 public class SampleClass {
 

@@ -1,4 +1,4 @@
-package fatbastard.ui.core;
+package ui.core;
 
 import java.util.ArrayList;
 

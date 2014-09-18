@@ -1,4 +1,4 @@
-package fatbastard.ui.core;
+package ui.core;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -16,7 +16,7 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
-import fatbastard.ui.utils.Utils;
+import ui.utils.Utils;
 
 public class Recommendation implements Comparable<Recommendation> {
 	

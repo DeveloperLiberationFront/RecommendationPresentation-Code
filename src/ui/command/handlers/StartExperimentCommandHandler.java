@@ -1,4 +1,4 @@
-package fatbastard.ui.command.handlers;
+package ui.command.handlers;
 
 import java.io.File;
 import java.io.IOException;
@@ -18,12 +18,12 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.xml.sax.SAXException;
 
-import fatbastard.ui.ExperimentShell;
-import fatbastard.ui.RecoDetailsShell;
-import fatbastard.ui.core.Recommendation;
-import fatbastard.ui.core.Task;
-import fatbastard.ui.core.TaskReader;
-import fatbastard.ui.utils.Utils;
+import ui.ExperimentShell;
+import ui.RecoDetailsShell;
+import ui.core.Recommendation;
+import ui.core.Task;
+import ui.core.TaskReader;
+import ui.utils.Utils;
 
 /**
  * Our sample handler extends AbstractHandler, an IHandler base class.

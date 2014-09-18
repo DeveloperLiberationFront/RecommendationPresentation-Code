@@ -8,7 +8,7 @@
  * Contributors:
  *     Laurent CARON (laurent.caron@gmail.com) - initial API and implementation
  *******************************************************************************/
-package fatbastard.ui;
+package ui;
 
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;

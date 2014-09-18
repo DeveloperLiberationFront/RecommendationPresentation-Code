@@ -9,7 +9,7 @@
  *     Jerry Huxtable (http://www.jhlabs.com/index.html) - initial API and implementation (on SWING), 
  *     Laurent CARON (laurent.caron at gmail dot com) - port to SWT
  *******************************************************************************/
-package fatbastard.ui;
+package ui;
 
 import java.util.Random;
 

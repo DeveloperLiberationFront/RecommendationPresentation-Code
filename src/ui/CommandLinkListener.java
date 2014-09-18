@@ -1,4 +1,4 @@
-package fatbastard.ui;
+package ui;
 
 import java.io.IOException;
 
@@ -11,7 +11,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.xml.sax.SAXException;
 
-import fatbastard.ui.core.Recorder;
+import ui.core.Recorder;
 
 public abstract class CommandLinkListener implements MouseListener {
 

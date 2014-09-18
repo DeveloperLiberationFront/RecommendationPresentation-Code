@@ -1,4 +1,4 @@
-package fatbastard.test;
+package test;
 
 import static org.junit.Assert.*;
 
@@ -12,8 +12,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.xml.sax.SAXException;
 
-import fatbastard.ui.core.Task;
-import fatbastard.ui.core.TaskReader;
+import ui.core.Task;
+import ui.core.TaskReader;
 
 public class TaskReaderTest {
 

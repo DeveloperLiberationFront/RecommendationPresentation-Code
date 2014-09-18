@@ -1,4 +1,4 @@
-package fatbastard.ui;
+package ui;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.SWTException;
@@ -22,8 +22,8 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Widget;
 
-import fatbastard.ui.StarRating.SIZE;
-import fatbastard.ui.core.Recommendation;
+import ui.StarRating.SIZE;
+import ui.core.Recommendation;
 
 /**
  * Instance of this class are composite that represents a choice like in Windows

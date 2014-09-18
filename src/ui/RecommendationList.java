@@ -1,4 +1,4 @@
-package fatbastard.ui;
+package ui;
 
 import java.util.HashSet;
 
@@ -10,8 +10,8 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 
-import fatbastard.ui.CommandLink;
-import fatbastard.ui.core.Recommendation;
+import ui.CommandLink;
+import ui.core.Recommendation;
 
 public class RecommendationList extends ScrolledComposite  {
 

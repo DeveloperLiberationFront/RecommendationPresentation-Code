@@ -1,4 +1,4 @@
-package fatbastard.ui;
+package ui;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -7,10 +7,10 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.widgets.Label;
 
-import fatbastard.ui.core.Recommendation;
-import fatbastard.ui.core.Recorder;
-import fatbastard.ui.core.Task;
-import fatbastard.ui.utils.Utils;
+import ui.core.Recommendation;
+import ui.core.Recorder;
+import ui.core.Task;
+import ui.utils.Utils;
 
 public class NextButtonListener implements SelectionListener {
 

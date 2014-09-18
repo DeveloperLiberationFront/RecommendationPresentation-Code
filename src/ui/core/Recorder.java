@@ -1,4 +1,4 @@
-package fatbastard.ui.core;
+package ui.core;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -9,7 +9,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Set;
 
-import fatbastard.ui.utils.Utils;
+import ui.utils.Utils;
 
 public class Recorder {
 

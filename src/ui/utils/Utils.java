@@ -1,4 +1,4 @@
-package fatbastard.ui.utils;
+package ui.utils;
 
 import java.io.File;
 import java.io.IOException;
@@ -17,8 +17,8 @@ import org.eclipse.core.runtime.Plugin;
 import org.eclipse.epp.usagedata.internal.gathering.UsageDataCaptureActivator;
 import org.osgi.framework.Bundle;
 
-import fatbastard.ui.core.Recommendation;
-import fatbastard.ui.core.Task;
+import ui.core.Recommendation;
+import ui.core.Task;
 
 public class Utils {
 

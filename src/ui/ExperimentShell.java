@@ -1,4 +1,4 @@
-package fatbastard.ui;
+package ui;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -28,10 +28,10 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.wb.swt.SWTResourceManager;
 import org.xml.sax.SAXException;
 
-import fatbastard.ui.core.Recommendation;
-import fatbastard.ui.core.Recorder;
-import fatbastard.ui.core.TaskReader;
-import fatbastard.ui.utils.Utils;
+import ui.core.Recommendation;
+import ui.core.Recorder;
+import ui.core.TaskReader;
+import ui.utils.Utils;
 
 
 public class ExperimentShell  {
