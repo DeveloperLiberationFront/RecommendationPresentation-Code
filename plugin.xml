@@ -25,56 +25,35 @@
          point="org.eclipse.ui.commands">
       <category
             id="org.eclipse.epp.usagedata.gathering.commands.category"
-            name="Sample Category">
+            name="Tasks">
       </category>
       <command
             categoryId="org.eclipse.epp.usagedata.gathering.commands.category"
-            id="org.eclipse.epp.usagedata.gathering.commands.sampleCommand"
-            name="Sample Command">
+            id="recommendationPresentation.showTasks"
+            name="Show Tasks">
       </command>
    </extension>
    <extension
          point="org.eclipse.ui.handlers">
       <handler
             class="fatbastard.ui.command.handlers.StartExperimentCommandHandler"
-            commandId="org.eclipse.epp.usagedata.gathering.commands.sampleCommand">
+            commandId="recommendationPresentation.showTasks">
       </handler>
-   </extension>
-   <extension
-         point="org.eclipse.ui.bindings">
-      <key
-            commandId="org.eclipse.epp.usagedata.gathering.commands.sampleCommand"
-            contextId="org.eclipse.ui.contexts.window"
-            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
-            sequence="M1+6">
-      </key>
    </extension>
    <extension
          point="org.eclipse.ui.menus">
       <menuContribution
             locationURI="menu:org.eclipse.ui.main.menu?after=additions">
          <menu
-               id="org.eclipse.epp.usagedata.gathering.menus.sampleMenu"
-               label="Sample Menu"
+               id="recommendationPresentation.tasksMenu"
+               label="Tasks"
                mnemonic="M">
             <command
-                  commandId="org.eclipse.epp.usagedata.gathering.commands.sampleCommand"
+                  commandId="recommendationPresentation.showTasks"
                   id="org.eclipse.epp.usagedata.gathering.menus.sampleCommand"
                   mnemonic="S">
             </command>
          </menu>
-      </menuContribution>
-      <menuContribution
-            locationURI="toolbar:org.eclipse.ui.main.toolbar?after=additions">
-         <toolbar
-               id="org.eclipse.epp.usagedata.gathering.toolbars.sampleToolbar">
-            <command
-                  commandId="org.eclipse.epp.usagedata.gathering.commands.sampleCommand"
-                  icon="icons/sample.gif"
-                  id="org.eclipse.epp.usagedata.gathering.toolbars.sampleCommand"
-                  tooltip="Say hello world">
-            </command>
-         </toolbar>
       </menuContribution>
    </extension>
    
