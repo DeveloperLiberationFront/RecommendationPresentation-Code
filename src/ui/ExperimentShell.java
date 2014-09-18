@@ -205,7 +205,7 @@ public class ExperimentShell {
 
             @Override
             public void focusGained(FocusEvent e) {
-                if (text.getText().equals("Enter your answer here...")) {
+                if ("Enter your answer here...".equals(text.getText())) {
                     text.setText("");
                     text.setForeground(new Color(display, 0, 0, 0));
                 }

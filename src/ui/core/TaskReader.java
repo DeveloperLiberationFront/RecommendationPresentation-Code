@@ -42,15 +42,15 @@ public class TaskReader {
             public void startElement(String uri, String localName,
                     String qName, Attributes attributes) throws SAXException {
 
-                if (qName.equalsIgnoreCase("task")) {
+                if ("task".equalsIgnoreCase(qName)) {
                     taskStart = true;
                 }
 
-                if (qName.equalsIgnoreCase("text")) {
+                if ("text".equalsIgnoreCase(qName)) {
                     textStart = true;
                 }
 
-                if (qName.equalsIgnoreCase("recommendation")) {
+                if ("recommendation".equalsIgnoreCase(qName)) {
                     recoStart = true;
                 }
 
@@ -60,7 +60,7 @@ public class TaskReader {
             @Override
             public void endElement(String uri, String localName, String qName)
                     throws SAXException {
-                if (qName.equalsIgnoreCase("task")) {
+                if ("task".equalsIgnoreCase(qName)) {
                     taskList.add(task);
                 }
 

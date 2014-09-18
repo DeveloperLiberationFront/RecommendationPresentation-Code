@@ -103,11 +103,11 @@ public class Recommendation implements Comparable<Recommendation> {
             public void startElement(String uri, String localName,
                     String qName, Attributes attributes) throws SAXException {
 
-                if (qName.equalsIgnoreCase("goodness")) {
+                if ("goodness".equalsIgnoreCase(qName)) {
                     goodnessStart = true;
                 }
 
-                if (qName.equalsIgnoreCase("displayname")) {
+                if ("displayname".equalsIgnoreCase(qName)) {
                     nameStart = true;
                 }
 
@@ -286,7 +286,7 @@ public class Recommendation implements Comparable<Recommendation> {
         ArrayList<String> friends = new ArrayList<String>();
         String line = null;
         while ((line = br.readLine()) != null) {
-            if (!line.equalsIgnoreCase(""))
+            if (!"".equalsIgnoreCase(line))
                 friends.add(line);
         }
         br.close();
