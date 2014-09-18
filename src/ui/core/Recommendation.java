@@ -286,7 +286,7 @@ public class Recommendation implements Comparable<Recommendation> {
         ArrayList<String> friends = new ArrayList<String>();
         String line = null;
         while ((line = br.readLine()) != null) {
-            if (!"".equalsIgnoreCase(line))
+            if (!line.isEmpty())
                 friends.add(line);
         }
         br.close();
