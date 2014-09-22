@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+   <feature url="features/RecommendationTasks_1.0.7.201409221421.jar" id="RecommendationTasks" version="1.0.7.201409221421">
+      <category name="tasks"/>
+   </feature>
+   <category-def name="tasks" label="SomeTasks"/>
+</site>

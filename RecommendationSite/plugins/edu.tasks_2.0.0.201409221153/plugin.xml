@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+   <extension-point id="org.eclipse.epp.usagedata.gathering.monitors" name="Usage Data Monitors" schema="schema/org.eclipse.epp.usagedata.gathering.monitors.exsd"/>
+   <extension-point id="org.eclipse.epp.usagedata.listeners.event" name="Event Listener" schema="schema/org.eclipse.epp.usagedata.listeners.event.exsd"/>
+   <extension
+         point="org.eclipse.ui.startup">
+      <startup
+            class="org.eclipse.epp.usagedata.internal.gathering.Startup"></startup>
+   </extension>
+   <extension
+         point="org.eclipse.epp.usagedata.gathering.monitors">
+      <monitor
+            class="org.eclipse.epp.usagedata.internal.gathering.monitors.CommandUsageMonitor">
+      </monitor>
+      
+   </extension>
+   <extension
+         point="org.eclipse.core.runtime.preferences">
+      <initializer
+            class="org.eclipse.epp.usagedata.internal.gathering.settings.UsageDataCapturePreferenceInitializer">
+      </initializer>
+   </extension>
+   <extension
+         point="org.eclipse.ui.commands">
+      <category
+            id="org.eclipse.epp.usagedata.gathering.commands.category"
+            name="Tasks">
+      </category>
+      <command
+            categoryId="org.eclipse.epp.usagedata.gathering.commands.category"
+            id="recommendationPresentation.showTasks"
+            name="Show Tasks">
+      </command>
+   </extension>
+   <extension
+         point="org.eclipse.ui.handlers">
+      <handler
+            class="ui.command.handlers.StartExperimentCommandHandler"
+            commandId="recommendationPresentation.showTasks">
+      </handler>
+   </extension>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            locationURI="menu:org.eclipse.ui.main.menu?after=additions">
+         <menu
+               id="recommendationPresentation.tasksMenu"
+               label="Tasks"
+               mnemonic="M">
+            <command
+                  commandId="recommendationPresentation.showTasks"
+                  id="org.eclipse.epp.usagedata.gathering.menus.sampleCommand"
+                  mnemonic="S">
+            </command>
+         </menu>
+      </menuContribution>
+   </extension>
+   
+
+</plugin>
