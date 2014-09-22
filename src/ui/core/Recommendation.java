@@ -34,7 +34,7 @@ public class Recommendation implements Comparable<Recommendation> {
 
     private String id = "";
 
-    private String htmlFile = "";
+    private File htmlFile = null;
 
     private int goodness = 0;
 
@@ -85,14 +85,15 @@ public class Recommendation implements Comparable<Recommendation> {
 
     public Recommendation(String id) throws URISyntaxException, IOException, ParserConfigurationException, SAXException {
         this.id = id;
-        String recommendationFolder = getRecommendationsFolder(id);
-        String xmlFile = recommendationFolder + File.separator + "reco.xml";
-        this.htmlFile = recommendationFolder + File.separator + "reco.html";
+        RecommendationBundle reco = Utils.getRecommendationsBundle(id);
+        
+        File xmlFile = reco.xmlFile; //recommendationFolder + File.separator + "reco.xml";
+        this.htmlFile = reco.htmlFile; // recommendationFolder + File.separator + "reco.html";
 
         readXmlFile(xmlFile);
     }
 
-    private void readXmlFile(String xmlFile) throws ParserConfigurationException, SAXException, IOException {
+    private void readXmlFile(File xmlFile) throws ParserConfigurationException, SAXException, IOException {
         SAXParserFactory factory = SAXParserFactory.newInstance();
         SAXParser saxParser = factory.newSAXParser();
         DefaultHandler handler = new DefaultHandler() {
@@ -142,10 +143,7 @@ public class Recommendation implements Comparable<Recommendation> {
         saxParser.parse(xmlFile, handler);
     }
 
-    private String getRecommendationsFolder(String id)
-            throws URISyntaxException, IOException {
-        return Utils.getResourceFolder() + File.separator + "recommendations" + File.separator + id;
-    }
+
 
     public void setGoodness(int goodness) {
         this.goodness = goodness;
@@ -193,11 +191,7 @@ public class Recommendation implements Comparable<Recommendation> {
     }
 
     public String getHtmlFile() {
-        return htmlFile;
-    }
-
-    public void setHtmlFile(String htmlFile) {
-        this.htmlFile = htmlFile;
+        return htmlFile.getAbsolutePath();
     }
 
     private void computeCondition() {
@@ -277,7 +271,7 @@ public class Recommendation implements Comparable<Recommendation> {
     }
 
     private ArrayList<String> readFriendsFile() throws URISyntaxException, IOException {
-        String friendsFile = Utils.getResourceFolder() + File.separator + "friends.txt";
+        File friendsFile = Utils.getFriendsFile();
 
         ArrayList<String> friends = new ArrayList<String>();
         try(BufferedReader br = new BufferedReader(new FileReader(friendsFile));)

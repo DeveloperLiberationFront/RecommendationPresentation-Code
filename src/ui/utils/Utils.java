@@ -2,6 +2,7 @@ package ui.utils;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -15,6 +16,7 @@ import org.eclipse.epp.usagedata.internal.gathering.UsageDataCaptureActivator;
 import org.osgi.framework.Bundle;
 
 import ui.core.Recommendation;
+import ui.core.RecommendationBundle;
 import ui.core.Task;
 
 public class Utils {
@@ -58,16 +60,44 @@ public class Utils {
         commandUsage.clear();
     }
 
-    public static String getResourceFolder() throws URISyntaxException, IOException {
+    private static File getResourceFile(String bundledPath) {
+        try {
+            Plugin plugin = UsageDataCaptureActivator.getDefault();
+            Bundle bundle = plugin.getBundle();
+            URL fileURL = bundle.getEntry(bundledPath);
+            return new File(FileLocator.resolve(fileURL).toURI());
+        } catch (URISyntaxException | IOException e) {
+            UsageDataCaptureActivator.logException("Problem finding resource", e);
+            return null;
+        }
 
-        Plugin plugin = UsageDataCaptureActivator.getDefault();
-        Bundle bundle = plugin.getBundle();
-        URL fileURL = bundle.getEntry("res");
-        File file = new File(FileLocator.resolve(fileURL).toURI());
-        return file.getAbsolutePath();
     }
 
     public static String getUserFolder() {
         return System.getProperty("user.home") + File.separator + ".ubc";
     }
+
+    public static File getFriendsFile() {
+        return getResourceFile("res/friends.txt");
+    }
+
+    public static RecommendationBundle getRecommendationsBundle(String id) {
+          File xmlFile = getResourceFile("res/recommendations/"+id+"/reco.xml");
+          File htmlFile = getResourceFile("res/recommendations/"+id+"/reco.html");
+          
+          return new RecommendationBundle(xmlFile, htmlFile);
+    }
+
+    public static File getTaskList() {
+        return getResourceFile("res/tasks.xml");
+    }
+    
+//    private String getFilename() throws URISyntaxException, IOException {
+//        return Utils.getResourceFolder() + File.separator + "tasks.xml";
+//    }
+    
+//  private String getRecommendationsFolder(String id)
+//  throws URISyntaxException, IOException {
+//return Utils.getResourceFolder() + File.separator + "recommendations" + File.separator + id;
+//}
 }

@@ -94,12 +94,10 @@ public class TaskReader {
     }
 
     public ArrayList<Task> getTaskList() throws SAXException, IOException, URISyntaxException {
-        saxParser.parse(getFilename(), handler);
+        saxParser.parse(Utils.getTaskList(), handler);
         return taskList;
     }
 
-    private String getFilename() throws URISyntaxException, IOException {
-        return Utils.getResourceFolder() + File.separator + "tasks.xml";
-    }
+
 
 }
