@@ -3,6 +3,7 @@ package ui.command.handlers;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.epp.usagedata.internal.gathering.UsageDataCaptureActivator;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
@@ -41,7 +42,7 @@ public class StartExperimentCommandHandler extends AbstractHandler {
                     shell.open();
                 } catch (Exception e) {
                     e.printStackTrace();
-                    throw new RuntimeException(e);
+                    UsageDataCaptureActivator.logException("Problem running experiment", e);
                 }
             }
         });

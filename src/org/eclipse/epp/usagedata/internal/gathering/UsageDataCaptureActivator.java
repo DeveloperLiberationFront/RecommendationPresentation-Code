@@ -30,7 +30,7 @@ import org.osgi.util.tracker.ServiceTracker;
 public class UsageDataCaptureActivator extends AbstractUIPlugin implements IStartup {
 
     // The plug-in ID
-    public static final String PLUGIN_ID = "org.eclipse.epp.usagedata.gathering"; //$NON-NLS-1$
+    public static final String PLUGIN_ID = "edu.tasks"; //$NON-NLS-1$
 
     // The shared instance
     private static UsageDataCaptureActivator plugin;
@@ -48,6 +48,7 @@ public class UsageDataCaptureActivator extends AbstractUIPlugin implements IStar
      * 
      * @see org.eclipse.core.runtime.Plugins#start(org.osgi.framework.BundleContext)
      */
+    @Override
     public void start(BundleContext context) throws Exception {
         super.start(context);
         plugin = this;
@@ -59,6 +60,7 @@ public class UsageDataCaptureActivator extends AbstractUIPlugin implements IStar
 
         getPreferenceStore().addPropertyChangeListener(new IPropertyChangeListener() {
 
+            @Override
             public void propertyChange(PropertyChangeEvent event) {
                 if (UsageDataCaptureSettings.CAPTURE_ENABLED_KEY.equals(event.getProperty())) {
                     if (isTrue(event.getNewValue())) {
@@ -100,6 +102,7 @@ public class UsageDataCaptureActivator extends AbstractUIPlugin implements IStar
          * the UIJob as this is a potentially expensive operation.
          */
         UIJob job = new UIJob("Usage Data Service Starter") { //$NON-NLS-1$
+            @Override
             public IStatus runInUIThread(IProgressMonitor monitor) {
                 if (settings.isEnabled()) {
                     service.startMonitoring();
@@ -117,6 +120,7 @@ public class UsageDataCaptureActivator extends AbstractUIPlugin implements IStar
      * 
      * @see org.eclipse.core.runtime.Plugin#stop(org.osgi.framework.BundleContext)
      */
+    @Override
     public void stop(BundleContext context) throws Exception {
         this.context = context;
         UsageDataService service = getUsageDataCaptureService();
@@ -143,6 +147,7 @@ public class UsageDataCaptureActivator extends AbstractUIPlugin implements IStar
         return plugin;
     }
 
+    @Override
     public void earlyStartup() {
         // Do nothing.
     }
@@ -157,8 +162,10 @@ public class UsageDataCaptureActivator extends AbstractUIPlugin implements IStar
      * @param e
      *            the exception to capture in the log.
      */
-    public void logException(String message, Throwable e) {
-        getLog().log(new Status(IStatus.ERROR, PLUGIN_ID, message, e));
+    public static void logException(String message, Throwable e) {
+        synchronized (plugin) {
+            plugin.getLog().log(new Status(IStatus.ERROR, PLUGIN_ID, message, e));
+        }
     }
 
     /**
