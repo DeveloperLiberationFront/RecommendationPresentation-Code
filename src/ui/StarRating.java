@@ -44,7 +44,7 @@ public class StarRating extends Canvas {
 
     public enum SIZE {
         SMALL, BIG
-    };
+    }
 
     private SIZE sizeOfStars;
 

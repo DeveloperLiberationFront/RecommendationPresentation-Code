@@ -43,6 +43,8 @@ public class Recommendation implements Comparable<Recommendation> {
     private String conditionShortString;
 
     private float rating;
+    
+    private Random random = new Random();
 
     @Override
     public boolean equals(Object obj)
@@ -78,8 +80,7 @@ public class Recommendation implements Comparable<Recommendation> {
         int difference = r.goodness - this.goodness;
         if (difference == 0)
             return this.id.compareTo(r.id);
-        else
-            return difference;
+        return difference;
     }
 
     public Recommendation(String id) throws URISyntaxException, IOException, ParserConfigurationException, SAXException {
@@ -203,18 +204,15 @@ public class Recommendation implements Comparable<Recommendation> {
         int conditionTotal = (Utils.conditions[0] + Utils.conditions[1] + Utils.conditions[2] + Utils.conditions[3]);
 
         if (conditionTotal % 4 == 0) {
-            Random generator = new Random();
-            int randomSeed = generator.nextInt(100) * generator.nextInt(100);
-            int randomInt = generator.nextInt(randomSeed + 1);
+            int randomSeed = random.nextInt(100) * random.nextInt(100);
+            int randomInt = random.nextInt(randomSeed + 1);
 
-            int condition = randomInt % 4;
-
-            this.setCondition(condition);
+            this.setCondition(randomInt % 4);
+            
             Utils.conditions[condition]++;
         }
 
         else {
-            int condition;
             Random generator = new Random();
             int randomInt = generator.nextInt(100);
             randomInt = randomInt % 4;
@@ -222,22 +220,22 @@ public class Recommendation implements Comparable<Recommendation> {
             if (Utils.conditions[randomInt] < Utils.conditions[(randomInt + 1) % 4] ||
                     Utils.conditions[randomInt] < Utils.conditions[(randomInt + 2) % 4] ||
                     Utils.conditions[randomInt] < Utils.conditions[(randomInt + 3) % 4]) {
-                condition = randomInt;
+                this.setCondition(randomInt);
             }
             else if (Utils.conditions[(randomInt + 1) % 4] < Utils.conditions[(randomInt + 2) % 4] ||
                     Utils.conditions[(randomInt + 1) % 4] < Utils.conditions[(randomInt + 3) % 4] ||
                     Utils.conditions[(randomInt + 1) % 4] < Utils.conditions[randomInt]) {
-                condition = (randomInt + 1) % 4;
+                this.setCondition((randomInt + 1) % 4);
             }
             else if (Utils.conditions[(randomInt + 2) % 4] < Utils.conditions[(randomInt + 3) % 4] ||
                     Utils.conditions[(randomInt + 2) % 4] < Utils.conditions[(randomInt + 1) % 4] ||
                     Utils.conditions[(randomInt + 2) % 4] < Utils.conditions[randomInt]) {
-                condition = (randomInt + 2) % 4;
+                this.setCondition((randomInt + 2) % 4);
             }
             else {
-                condition = (randomInt + 3) % 4;
+                this.setCondition((randomInt + 3) % 4);
             }
-            this.setCondition(condition);
+
             Utils.conditions[condition]++;
         }
     }
@@ -256,14 +254,13 @@ public class Recommendation implements Comparable<Recommendation> {
         else if (this.condition == CONDITION_PEOPLE_NAME) {
             ArrayList<String> friends = readFriendsFile();
             int size = friends.size();
-            Random random = new Random();
+            
             int randomSeed = random.nextInt(100);
             int index = random.nextInt(randomSeed + 1) % size;
 
             this.conditionString = friends.get(index) + " uses this command.";
         }
         else if (this.condition == CONDITION_PEOPLE_NUMBER) {
-            Random random = new Random();
             int randomSeed = random.nextInt(100);
             int index = random.nextInt(randomSeed + 1) % 30;
             int number = index + 13;
@@ -272,7 +269,7 @@ public class Recommendation implements Comparable<Recommendation> {
         }
         else if (this.condition == CONDITION_CONFIDENCE_RATING) {
             this.conditionString = "";
-            float var = (new Random().nextInt() % 4);
+            float var = (random.nextInt() % 4);
             var = Math.abs(var);
             var = (float) (var / 2 + 3.5);
             this.rating = var;
@@ -282,14 +279,19 @@ public class Recommendation implements Comparable<Recommendation> {
     private ArrayList<String> readFriendsFile() throws URISyntaxException, IOException {
         String friendsFile = Utils.getResourceFolder() + File.separator + "friends.txt";
 
-        BufferedReader br = new BufferedReader(new FileReader(friendsFile));
         ArrayList<String> friends = new ArrayList<String>();
-        String line = null;
-        while ((line = br.readLine()) != null) {
-            if (!line.isEmpty())
-                friends.add(line);
+        try(BufferedReader br = new BufferedReader(new FileReader(friendsFile));)
+        {
+            String line = null;
+            while ((line = br.readLine()) != null) {
+                if (!line.isEmpty())
+                    friends.add(line);
+            }
         }
-        br.close();
+        catch (IOException e) {
+            throw e;
+        }
+
         return friends;
     }
 
@@ -299,7 +301,7 @@ public class Recommendation implements Comparable<Recommendation> {
 
     public float getRating() {
         return rating;
-    };
+    }
 
     public void setRating(float rating) {
         this.rating = rating;

@@ -27,6 +27,7 @@ public class StartExperimentCommandHandler extends AbstractHandler {
      * the command has been executed, so extract extract the needed information
      * from the application context.
      */
+    @Override
     public Object execute(ExecutionEvent event) throws ExecutionException {
         IWorkbenchWindow window = HandlerUtil.getActiveWorkbenchWindowChecked(event);
 
@@ -40,6 +41,7 @@ public class StartExperimentCommandHandler extends AbstractHandler {
                     shell.open();
                 } catch (Exception e) {
                     e.printStackTrace();
+                    throw new RuntimeException(e);
                 }
             }
         });
