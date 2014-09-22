@@ -64,8 +64,10 @@ public class Utils {
         try {
             Plugin plugin = UsageDataCaptureActivator.getDefault();
             Bundle bundle = plugin.getBundle();
-            URL fileURL = bundle.getEntry(bundledPath);
-            return new File(FileLocator.resolve(fileURL).toURI());
+            //URL fileURL = bundle.getEntry(bundledPath);
+            URL fileURL = bundle.getResource(bundledPath);
+            return new File(FileLocator.toFileURL(fileURL).toURI());
+            //return new File(fileURL.toURI());
         } catch (URISyntaxException | IOException e) {
             UsageDataCaptureActivator.logException("Problem finding resource", e);
             return null;
