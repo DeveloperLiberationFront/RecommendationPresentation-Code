@@ -10,8 +10,6 @@
  *******************************************************************************/
 package org.eclipse.epp.usagedata.internal.gathering.monitors;
 
-import java.util.ArrayList;
-
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.IExecutionListener;
@@ -45,22 +43,27 @@ public class CommandUsageMonitor implements UsageMonitor {
 
     private ExtensionIdToBundleMapper commandToBundleIdMapper;
 
+    @Override
     public void startMonitoring(final UsageDataService usageDataService) {
         executionListener = new IExecutionListener() {
+            @Override
             public void notHandled(String commandId, NotHandledException exception) {
                 recordEvent(NO_HANDLER, usageDataService, commandId);
             }
 
+            @Override
             public void postExecuteFailure(String commandId, ExecutionException exception) {
                 recordEvent(FAILED, usageDataService, commandId);
             }
 
+            @Override
             public void postExecuteSuccess(String commandId, Object returnValue) {
                 recordEvent(EXECUTED, usageDataService, commandId);
             }
 
+            @Override
             public void preExecute(String commandId, ExecutionEvent event) {
-
+                //empty
             }
         };
         getCommandService().addExecutionListener(executionListener);
@@ -71,6 +74,7 @@ public class CommandUsageMonitor implements UsageMonitor {
         return (ICommandService) PlatformUI.getWorkbench().getAdapter(ICommandService.class);
     }
 
+    @Override
     public void stopMonitoring() {
         ICommandService commandService = getCommandService();
         if (commandService != null)
@@ -78,8 +82,7 @@ public class CommandUsageMonitor implements UsageMonitor {
         commandToBundleIdMapper.dispose();
     }
 
-    private void recordEvent(String what,
-            final UsageDataService usageDataService, String commandId) {
+    private void recordEvent(String what, final UsageDataService usageDataService, String commandId) {
         String bundleId = getBundleId(commandId);
         System.out.println("Here's a command: " + commandId + " " + bundleId);
         recordForExperiment(commandId);
@@ -88,23 +91,7 @@ public class CommandUsageMonitor implements UsageMonitor {
 
     private void recordForExperiment(String commandId) {
         if (Utils.experimentRunning) {
-            if (Utils.commandUsage.get(Utils.currentTaskNumber) == null) {
-                ArrayList<String> list = new ArrayList<String>();
-                list.add(commandId);
-                Utils.commandUsage.put(Utils.currentTaskNumber, list);
-            }
-            else {
-                ArrayList<String> list = Utils.commandUsage.get(Utils.currentTaskNumber);
-                list.add(commandId);
-                Utils.commandUsage.put(Utils.currentTaskNumber, list);
-            }
-
-            if (Utils.commandUsageVector.containsKey(commandId)) {
-                Utils.commandUsageVector.put(commandId, (Utils.commandUsageVector.get(commandId) + 1));
-            }
-            else {
-                Utils.commandUsageVector.put(commandId, 1);
-            }
+            Utils.commandWasUsedInCurrentTask(commandId);
         }
     }
 

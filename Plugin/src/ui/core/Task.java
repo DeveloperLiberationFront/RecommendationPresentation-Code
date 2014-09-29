@@ -11,7 +11,6 @@ public class Task {
     private HashSet<String> recommendations = new HashSet<String>();
 
     public Task(String taskDetails, HashSet<String> recommendations) {
-        super();
         this.taskDetails = taskDetails;
         this.recommendations = recommendations;
     }

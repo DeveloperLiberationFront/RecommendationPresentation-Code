@@ -25,8 +25,11 @@ public class RecoDetailsShell {
     private Recommendation recommendation;
 
     public RecoDetailsShell(Recommendation recommendation, Display display) {
-        if (display == null)
-            display = PlatformUI.getWorkbench().getDisplay();
+        if (display == null) {
+            this.display = PlatformUI.getWorkbench().getDisplay();
+        } else {
+            this.display = display;
+        }
         this.recommendation = recommendation;
 
     }

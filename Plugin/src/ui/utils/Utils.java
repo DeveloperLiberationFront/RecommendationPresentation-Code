@@ -2,12 +2,16 @@ package ui.utils;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
+import java.io.PrintWriter;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.TreeSet;
 
 import org.eclipse.core.runtime.FileLocator;
@@ -23,21 +27,22 @@ public class Utils {
 
     public static int currentTaskNumber = 0;
 
-    public static HashMap<Integer, ArrayList<String>> commandUsage = new HashMap<Integer, ArrayList<String>>();
-
+    private static Map<Integer, List<String>> commandUsage = new HashMap<Integer, List<String>>();
+    private static Map<String, Integer> commandUsageVector = new HashMap<String, Integer>();
+    
     public static boolean experimentRunning = false;
 
     public static ArrayList<Task> taskList;
 
-    public static HashSet<Recommendation> allRecommendations = new HashSet<Recommendation>();
+    public static final HashSet<Recommendation> allRecommendations = new HashSet<Recommendation>();
 
-    public static TreeSet<Recommendation> recommendationQueue = new TreeSet<Recommendation>();
+    public static final TreeSet<Recommendation> recommendationQueue = new TreeSet<Recommendation>();
 
-    public static HashSet<Recommendation> currentTaskRecos = new HashSet<Recommendation>();
+    public static final HashSet<Recommendation> currentTaskRecos = new HashSet<Recommendation>();
 
-    public static HashSet<Recommendation> filterList = new HashSet<Recommendation>();
+    public static final HashSet<Recommendation> filterList = new HashSet<Recommendation>();
 
-    public static HashMap<String, Integer> commandUsageVector = new HashMap<String, Integer>();
+    
 
     public static int conditions[] = new int[4];
 
@@ -93,13 +98,61 @@ public class Utils {
     public static File getTaskList() {
         return getResourceFile("res/tasks.xml");
     }
-    
-//    private String getFilename() throws URISyntaxException, IOException {
-//        return Utils.getResourceFolder() + File.separator + "tasks.xml";
-//    }
-    
-//  private String getRecommendationsFolder(String id)
-//  throws URISyntaxException, IOException {
-//return Utils.getResourceFolder() + File.separator + "recommendations" + File.separator + id;
-//}
+
+    public static void commandWasUsedInCurrentTask(String commandId) {
+        //add a that the user used the command in the current task
+        
+        List<String> list = Utils.commandUsage.get(Utils.currentTaskNumber);
+        
+        if (list == null) { 
+            list = new ArrayList<String>();
+        }
+        list.add(commandId);
+        commandUsage.put(Utils.currentTaskNumber, list);
+
+      //Increment the total uses for the given tool
+        if (commandUsageVector.containsKey(commandId)) {
+            commandUsageVector.put(commandId, (Utils.commandUsageVector.get(commandId) + 1));
+        }
+        else {
+            commandUsageVector.put(commandId, 1);
+        }
+    }
+
+    public static boolean userHasUsedCommand(String id) {
+        return commandUsageVector.containsKey(id);
+    }
+
+    public static int getCommandUsage(String id) {
+        Integer retVal = commandUsageVector.get(id);
+        return retVal == null ? 0 : retVal.intValue();
+    }
+
+    public static List<String> getCommandsUsedInCurrentTask() {
+        List<String> retVal = Utils.commandUsage.get(Utils.currentTaskNumber);
+        return retVal == null ? Collections.<String>emptyList() : retVal;
+    }
+
+    public static void dumpCommandsUsed(String fileName) {
+        try (PrintWriter out = new PrintWriter(fileName);) {
+            out.println("<experiment>");
+            for (Entry<Integer, List<String>> entry: commandUsage.entrySet()) {
+                out.println("<task>");
+                out.println("<number>" + entry.getKey() + "</number>");
+                out.println("<usedcommands>");
+                for (String str : entry.getValue()) {
+                    out.println("<id>" + str + "</id>");
+                }
+                out.println("</usedcommands>");
+                out.println("</task>");
+            }
+            out.println("</experiment>");
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            UsageDataCaptureActivator.logException("Problem dumping commandUsages", e);
+        }
+
+    }
+
 }

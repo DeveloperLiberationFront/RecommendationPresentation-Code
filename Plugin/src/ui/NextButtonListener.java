@@ -1,7 +1,7 @@
 package ui;
 
-import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
@@ -29,9 +29,9 @@ public class NextButtonListener implements SelectionListener {
         }
 
         // compute recommendations for the previous task
-        ArrayList<String> commandUsageArrayList = Utils.commandUsage.get(Utils.currentTaskNumber);
-        HashSet<String> commandUsageHashSet = (commandUsageArrayList == null ? new HashSet<String>() : new HashSet<String>(
-                commandUsageArrayList));
+        List<String> commandUsageList = Utils.getCommandsUsedInCurrentTask();
+        HashSet<String> commandUsageHashSet = (commandUsageList == null ? new HashSet<String>() : new HashSet<String>(
+                commandUsageList));
 
         Task task = Utils.taskList.get(Utils.currentTaskNumber);
         HashSet<String> taskRecommendations = task.getRecommendations();

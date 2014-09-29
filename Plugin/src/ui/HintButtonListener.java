@@ -1,7 +1,8 @@
 package ui;
 
-import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
@@ -21,9 +22,9 @@ public class HintButtonListener implements SelectionListener {
     @Override
     public void widgetSelected(SelectionEvent e) {
         // compute recommendations for the this task
-        ArrayList<String> commandUsageArrayList = Utils.commandUsage.get(Utils.currentTaskNumber);
+        List<String> commandUsageArrayList = Utils.getCommandsUsedInCurrentTask();
 
-        HashSet<String> commandUsageHashSet = (commandUsageArrayList == null ? new HashSet<String>() : new HashSet<String>(
+        Set<String> commandUsageHashSet = (commandUsageArrayList == null ? new HashSet<String>() : new HashSet<String>(
                 commandUsageArrayList));
 
         Task task = Utils.taskList.get(Utils.currentTaskNumber);
@@ -41,7 +42,7 @@ public class HintButtonListener implements SelectionListener {
 
                     // this means this is being recommended for the first time
 
-                    if (!Utils.commandUsageVector.containsKey(reco.getId())) { // check if the user has already used this command, if yes, then don't recommend it
+                    if (!Utils.userHasUsedCommand(reco.getId())) { // if user has already used it, then don't recommend it
                         reco.addCondition();
                         Utils.allRecommendations.add(reco);
                         boolean added = Utils.currentTaskRecos.add(reco);
@@ -53,9 +54,7 @@ public class HintButtonListener implements SelectionListener {
                 else { // get it from the allRecommendations set and use the same condition
 
                     // this means the recommendation has been shown before at least once
-                    Integer commandCount = Utils.commandUsageVector.get(reco.getId());
-                    if (commandCount == null)
-                        commandCount = 0;
+                    int commandCount = Utils.getCommandUsage(reco.getId());
                     if (commandCount < 4) { // Now we want to check if the user has used the command more than 3 times, if yes, then we don't show the recommendation
                         // (we assume that he learned the command)
                         for (Recommendation r : Utils.allRecommendations) {

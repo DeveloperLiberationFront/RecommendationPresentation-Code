@@ -6,7 +6,6 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Set;
 
 import ui.utils.Utils;
 
@@ -112,22 +111,8 @@ public class Recorder {
 
         // dump all commands the user used
         String fileNameUsage = dirName + File.separator + "usage.xml";
-        Set<Integer> keys = Utils.commandUsage.keySet();
-        out = new PrintWriter(fileNameUsage);
-        out.println("<experiment>");
-        for (int key : keys) {
-            out.println("<task>");
-            ArrayList<String> usage = Utils.commandUsage.get(key);
-            out.println("<number>" + key + "</number>");
-            out.println("<usedcommands>");
-            for (String str : usage) {
-                out.println("<id>" + str + "</id>");
-            }
-            out.println("</usedcommands>");
-            out.println("</task>");
-        }
-        out.println("</experiment>");
-        out.close();
+        
+        Utils.dumpCommandsUsed(fileNameUsage);
 
         // dump user's responses to the tasks
         String fileNameResponses = dirName + File.separator + "responses.xml";
