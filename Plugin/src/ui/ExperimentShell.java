@@ -161,17 +161,17 @@ public class ExperimentShell {
 
         lblTaskNumber = new Label(leftPane, SWT.WRAP);
         lblTaskNumber.setLayoutData(new GridData(SWT.LEFT, SWT.FILL, true, true, 1, 1));
-        FontData[] fd1 = lblTaskNumber.getFont().getFontData();
-        fd1[0].setHeight(24);
-        lblTaskNumber.setFont(SWTResourceManager.getFont("Lucida Grande", 18, SWT.NORMAL));
+//        FontData[] fd1 = lblTaskNumber.getFont().getFontData();
+//        fd1[0].setHeight(24);
+        lblTaskNumber.setFont(SWTResourceManager.getFont("Lucida Grande", 24, SWT.NORMAL));
         lblTaskNumber.setForeground(new Color(this.display, 35, 107, 178));
         lblTaskNumber.setText("Task 1 of 16   ");
 
-        btnHint = new Button(leftPane, SWT.NONE);
-        btnHint.setLayoutData(new GridData(SWT.RIGHT, SWT.TOP, true, true, 1, 1));
-        btnHint.setText("Show Recommendations");
-        btnHint.setToolTipText("Click here to view command recommendations for this task.");
-        btnHint.addSelectionListener(new HintButtonListener(this));
+//        btnHint = new Button(leftPane, SWT.NONE);
+//        btnHint.setLayoutData(new GridData(SWT.RIGHT, SWT.TOP, true, true, 1, 1));
+//        btnHint.setText("Show Recommendations");
+//        btnHint.setToolTipText("Click here to view command recommendations for this task.");
+//        btnHint.addSelectionListener(new HintButtonListener(this));
 
         lblThisIsA = new Label(leftPane, SWT.WRAP);
         lblThisIsA.setLayoutData(new GridData(SWT.LEFT, SWT.FILL, true, true, 2, 1));
