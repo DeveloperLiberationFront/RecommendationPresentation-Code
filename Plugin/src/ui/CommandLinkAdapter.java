@@ -3,7 +3,7 @@ package ui;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
 
-public abstract class CommandLinkListener implements MouseListener {
+public abstract class CommandLinkAdapter implements MouseListener {
 
     ExperimentShell shell;
 
@@ -11,7 +11,7 @@ public abstract class CommandLinkListener implements MouseListener {
 
     RecommendationList oldList;
 
-    public CommandLinkListener() {
+    public CommandLinkAdapter() {
         shell = ExperimentShell.getInstance();
         newList = shell.getNewRecoList();
         // oldList = shell.getOldRecoList();
@@ -20,10 +20,12 @@ public abstract class CommandLinkListener implements MouseListener {
 
     @Override
     public void mouseDoubleClick(MouseEvent e) {
+        //let the children overwrite what they want
     }
 
     @Override
     public void mouseUp(MouseEvent e) {
+        // let the children overwrite what they want
     }
 
 }

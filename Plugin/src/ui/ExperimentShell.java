@@ -114,7 +114,7 @@ public class ExperimentShell {
         newRecommendationList = new RecommendationList(holderTop, SWT.NONE);
         newRecommendationList.setToolTipText("New commands will be recommended here as you complete the tasks.");
 
-        newRecommendationList.setRecommendationListener(new CommandLinkListener() {
+        newRecommendationList.setRecommendationListener(new CommandLinkAdapter() {
             @Override
             public void mouseDown(MouseEvent e) {
                 CommandLink cLink = null;
