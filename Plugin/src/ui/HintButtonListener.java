@@ -22,6 +22,11 @@ public class HintButtonListener implements SelectionListener {
     @Override
     public void widgetSelected(SelectionEvent e) {
         // compute recommendations for the this task
+        showRecommendations(experimentShell);
+
+    }
+
+    public static void showRecommendations(ExperimentShell shellToRefresh) {
         List<String> commandUsageArrayList = Utils.getCommandsUsedInCurrentTask();
 
         Set<String> commandUsageHashSet = (commandUsageArrayList == null ? new HashSet<String>() : new HashSet<String>(
@@ -71,11 +76,10 @@ public class HintButtonListener implements SelectionListener {
                 }
 
             }
-            experimentShell.refreshRecommendationLists();
+            shellToRefresh.refreshRecommendationLists();
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-
     }
 
     @Override

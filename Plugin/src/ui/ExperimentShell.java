@@ -296,7 +296,7 @@ public class ExperimentShell {
         return btnNext;
     }
 
-    public Text getText() {
+    public Text getTextBox() {
         return text;
     }
 

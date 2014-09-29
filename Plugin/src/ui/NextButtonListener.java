@@ -3,6 +3,7 @@ package ui;
 import java.util.HashSet;
 import java.util.List;
 
+import org.eclipse.epp.usagedata.internal.gathering.UsageDataCaptureActivator;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 
@@ -20,12 +21,17 @@ public class NextButtonListener implements SelectionListener {
 
     @Override
     public void widgetSelected(SelectionEvent e) {
+        
+        String response = shell.getTextBox().getText();
+        
+        if ("".equals(response) || "Enter your answer here...".equals(response)) {
+            return;
+        }
 
         try {
             Recorder.getInstance().dumpRecords();
         } catch (Exception e1) {
-            // TODO Auto-generated catch block
-            e1.printStackTrace();
+            UsageDataCaptureActivator.logException("problem dumping", e1);
         }
 
         // compute recommendations for the previous task
@@ -42,24 +48,10 @@ public class NextButtonListener implements SelectionListener {
 
         shell.clearRecommendations();
 
-        /*
-         * try{
-         * for (String str : taskRecommendations){
-         * Recommendation reco = new Recommendation(str);
-         * boolean added = Utils.allRecommendations.add(reco);
-         * if (added){
-         * Utils.recommendationQueue.add(reco);
-         * }
-         * }
-         * shell.refreshRecommendationLists();
-         * }
-         * catch (Exception ex){
-         * ex.printStackTrace();
-         * }
-         */
 
         // record the responses
-        Recorder.getInstance().recordResponse(shell.getText().getText());
+        
+        Recorder.getInstance().recordResponse(response);
 
         // new task
         Utils.currentTaskNumber++;
@@ -67,9 +59,12 @@ public class NextButtonListener implements SelectionListener {
             shell.close();
             return;
         }
+        
+        HintButtonListener.showRecommendations(shell);
+        
         shell.getTaskNumberLabel().setText("Task " + (Utils.currentTaskNumber + 1) + " of " + Utils.taskList.size());
         shell.getTaskLabel().setText(Utils.taskList.get(Utils.currentTaskNumber).getTaskDetails());
-        shell.getText().setText("");
+        shell.getTextBox().setText("");
 
         if (Utils.currentTaskNumber == (Utils.taskList.size() - 1))
             shell.getBtnNext().setText("Finish");
