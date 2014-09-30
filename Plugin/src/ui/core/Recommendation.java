@@ -191,7 +191,6 @@ public class Recommendation implements Comparable<Recommendation> {
     }
 
     public String getHtmlFile() {
-        UsageDataCaptureActivator.logException("HTML File requested "+getHtmlFile(), null);
         return htmlFile.getAbsolutePath();
     }
 
