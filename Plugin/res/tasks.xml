@@ -36,7 +36,7 @@
         
     </task>
     <task>
-        <text>Locate and open the file Strip.java.  List the line numbers where the Strip constructor is invoked in this file. 
+        <text>Locate and open the file Strip.java.  List the line numbers where the Strip constructors are invoked in this file. 
 </text>
         <recommendation>org.eclipse.ui.navigate.openResource</recommendation>
         <recommendation>org.eclipse.jdt.ui.navigate.open.type</recommendation>

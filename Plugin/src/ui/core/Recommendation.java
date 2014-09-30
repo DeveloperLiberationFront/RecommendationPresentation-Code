@@ -195,43 +195,45 @@ public class Recommendation implements Comparable<Recommendation> {
     }
 
     private void computeCondition() {
-        int conditionTotal = (Utils.conditions[0] + Utils.conditions[1] + Utils.conditions[2] + Utils.conditions[3]);
-
-        if (conditionTotal % 4 == 0) {
-            int randomSeed = random.nextInt(100) * random.nextInt(100);
-            int randomInt = random.nextInt(randomSeed + 1);
-
-            this.setCondition(randomInt % 4);
-            
-            Utils.conditions[condition]++;
-        }
-
-        else {
-            Random generator = new Random();
-            int randomInt = generator.nextInt(100);
-            randomInt = randomInt % 4;
-
-            if (Utils.conditions[randomInt] < Utils.conditions[(randomInt + 1) % 4] ||
-                    Utils.conditions[randomInt] < Utils.conditions[(randomInt + 2) % 4] ||
-                    Utils.conditions[randomInt] < Utils.conditions[(randomInt + 3) % 4]) {
-                this.setCondition(randomInt);
-            }
-            else if (Utils.conditions[(randomInt + 1) % 4] < Utils.conditions[(randomInt + 2) % 4] ||
-                    Utils.conditions[(randomInt + 1) % 4] < Utils.conditions[(randomInt + 3) % 4] ||
-                    Utils.conditions[(randomInt + 1) % 4] < Utils.conditions[randomInt]) {
-                this.setCondition((randomInt + 1) % 4);
-            }
-            else if (Utils.conditions[(randomInt + 2) % 4] < Utils.conditions[(randomInt + 3) % 4] ||
-                    Utils.conditions[(randomInt + 2) % 4] < Utils.conditions[(randomInt + 1) % 4] ||
-                    Utils.conditions[(randomInt + 2) % 4] < Utils.conditions[randomInt]) {
-                this.setCondition((randomInt + 2) % 4);
-            }
-            else {
-                this.setCondition((randomInt + 3) % 4);
-            }
-
-            Utils.conditions[condition]++;
-        }
+        
+        this.setCondition(CONDITION_CONFIDENCE_RATING);
+//        int conditionTotal = (Utils.conditions[0] + Utils.conditions[1] + Utils.conditions[2] + Utils.conditions[3]);
+//
+//        if (conditionTotal % 4 == 0) {
+//            int randomSeed = random.nextInt(100) * random.nextInt(100);
+//            int randomInt = random.nextInt(randomSeed + 1);
+//
+//            this.setCondition(randomInt % 4);
+//            
+//            Utils.conditions[condition]++;
+//        }
+//
+//        else {
+//            Random generator = new Random();
+//            int randomInt = generator.nextInt(100);
+//            randomInt = randomInt % 4;
+//
+//            if (Utils.conditions[randomInt] < Utils.conditions[(randomInt + 1) % 4] ||
+//                    Utils.conditions[randomInt] < Utils.conditions[(randomInt + 2) % 4] ||
+//                    Utils.conditions[randomInt] < Utils.conditions[(randomInt + 3) % 4]) {
+//                this.setCondition(randomInt);
+//            }
+//            else if (Utils.conditions[(randomInt + 1) % 4] < Utils.conditions[(randomInt + 2) % 4] ||
+//                    Utils.conditions[(randomInt + 1) % 4] < Utils.conditions[(randomInt + 3) % 4] ||
+//                    Utils.conditions[(randomInt + 1) % 4] < Utils.conditions[randomInt]) {
+//                this.setCondition((randomInt + 1) % 4);
+//            }
+//            else if (Utils.conditions[(randomInt + 2) % 4] < Utils.conditions[(randomInt + 3) % 4] ||
+//                    Utils.conditions[(randomInt + 2) % 4] < Utils.conditions[(randomInt + 1) % 4] ||
+//                    Utils.conditions[(randomInt + 2) % 4] < Utils.conditions[randomInt]) {
+//                this.setCondition((randomInt + 2) % 4);
+//            }
+//            else {
+//                this.setCondition((randomInt + 3) % 4);
+//            }
+//
+//            Utils.conditions[condition]++;
+//        }
     }
 
     public String getConditionString() {

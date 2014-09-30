@@ -14,6 +14,7 @@ import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.FocusListener;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
@@ -48,7 +49,7 @@ public class ExperimentShell {
 
     private Label lblThisIsA;
 
-    private Text text;
+    private Text textbox;
 
     private Button btnNext;
 
@@ -59,6 +60,12 @@ public class ExperimentShell {
     private RecommendationList newRecommendationList;
 
     private Label lblYouMayEnter;
+
+    private Font font24;
+
+    private Font font16;
+
+    private Font font14;
 
     private ExperimentShell() {
     }
@@ -161,53 +168,54 @@ public class ExperimentShell {
 
         lblTaskNumber = new Label(leftPane, SWT.WRAP);
         lblTaskNumber.setLayoutData(new GridData(SWT.LEFT, SWT.FILL, true, true, 1, 1));
-//        FontData[] fd1 = lblTaskNumber.getFont().getFontData();
-//        fd1[0].setHeight(24);
-        lblTaskNumber.setFont(SWTResourceManager.getFont("Lucida Grande", 24, SWT.NORMAL));
+        // http://stackoverflow.com/questions/1449968/change-just-the-font-size-in-swt
+        FontData[] fd1 = lblTaskNumber.getFont().getFontData();
+        fd1[0].setHeight(24);
+        font24 = new Font(display, fd1);
+        lblTaskNumber.setFont(font24);
         lblTaskNumber.setForeground(new Color(this.display, 35, 107, 178));
         lblTaskNumber.setText("Task 1 of 16   ");
 
-//        btnHint = new Button(leftPane, SWT.NONE);
-//        btnHint.setLayoutData(new GridData(SWT.RIGHT, SWT.TOP, true, true, 1, 1));
-//        btnHint.setText("Show Recommendations");
-//        btnHint.setToolTipText("Click here to view command recommendations for this task.");
-//        btnHint.addSelectionListener(new HintButtonListener(this));
 
         lblThisIsA = new Label(leftPane, SWT.WRAP);
         lblThisIsA.setLayoutData(new GridData(SWT.LEFT, SWT.FILL, true, true, 2, 1));
         FontData[] fd = lblThisIsA.getFont().getFontData();
-        fd[0].setHeight(24);
-        lblThisIsA.setFont(SWTResourceManager.getFont("Lucida Grande", 18, SWT.NORMAL));
+        fd[0].setHeight(16);
+        font16 = new Font(display, fd1);
+        lblThisIsA.setFont(font16);
         lblThisIsA.setForeground(new Color(this.display, 35, 107, 178));
         lblThisIsA.setText(Utils.taskList.get(Utils.currentTaskNumber).getTaskDetails());
 
         lblYouMayEnter = new Label(leftPane, SWT.NONE);
-        lblYouMayEnter.setFont(SWTResourceManager.getFont("Lucida Grande", 14, SWT.NORMAL));
+        FontData[] fd2 = lblYouMayEnter.getFont().getFontData();
+        fd2[0].setHeight(14);
+        font14 = new Font(display, fd1);
+       // lblYouMayEnter.setFont(SWTResourceManager.getFont("Lucida Grande", 14, SWT.NORMAL));
         lblYouMayEnter.setForeground(new Color(this.display, 35, 107, 178));
-        lblYouMayEnter.setText("You may enter your response here...");
+        lblYouMayEnter.setText("Enter your response here...");
 
-        text = new Text(leftPane, SWT.BORDER | SWT.MULTI);
-        text.setFont(SWTResourceManager.getFont("Lucida Grande", 16, SWT.NORMAL));
-        text.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
-        text.setText("Enter your answer here...");
-        text.setForeground(new Color(display, 128, 128, 128));
+        textbox = new Text(leftPane, SWT.BORDER | SWT.MULTI);
+        textbox.setFont(SWTResourceManager.getFont("Lucida Grande", 16, SWT.NORMAL));
+        textbox.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
+        textbox.setText("Enter your answer here...");
+        textbox.setForeground(new Color(display, 128, 128, 128));
 
-        text.addFocusListener(new FocusListener() {
+        textbox.addFocusListener(new FocusListener() {
 
             @Override
             public void focusLost(FocusEvent e) {
-                if (text.getText().length() == 0) {
-                    text.setText("Enter your answer here...");
-                    text.setForeground(new Color(display, 128, 128, 128));
+                if (textbox.getText().length() == 0) {
+                    textbox.setText("Enter your answer here...");
+                    textbox.setForeground(new Color(display, 128, 128, 128));
                 }
 
             }
 
             @Override
             public void focusGained(FocusEvent e) {
-                if ("Enter your answer here...".equals(text.getText())) {
-                    text.setText("");
-                    text.setForeground(new Color(display, 0, 0, 0));
+                if ("Enter your answer here...".equals(textbox.getText())) {
+                    textbox.setText("");
+                    textbox.setForeground(new Color(display, 0, 0, 0));
                 }
             }
         });
@@ -297,7 +305,7 @@ public class ExperimentShell {
     }
 
     public Text getTextBox() {
-        return text;
+        return textbox;
     }
 
     public void close() {
