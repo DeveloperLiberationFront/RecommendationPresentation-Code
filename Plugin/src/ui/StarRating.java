@@ -198,13 +198,13 @@ public class StarRating extends Canvas {
     }
 
     private Point computeSizeVertical() {
-        final int width = sizeOfStars.equals(SIZE.BIG) ? SIZE_BIG : SIZE_SMALL;
+        final int width = sizeOfStars == SIZE.BIG ? SIZE_BIG : SIZE_SMALL;
         final int height = maxNumberOfStars * width;
         return new Point(width + getBorderWidth() * 2, height + getBorderWidth() * 2);
     }
 
     private Point computeSizeHorizontal() {
-        final int height = sizeOfStars.equals(SIZE.BIG) ? SIZE_BIG : SIZE_SMALL;
+        final int height = sizeOfStars == SIZE.BIG ? SIZE_BIG : SIZE_SMALL;
         final int width = maxNumberOfStars * height;
         return new Point(width + getBorderWidth() * 2, height + getBorderWidth() * 2);
     }

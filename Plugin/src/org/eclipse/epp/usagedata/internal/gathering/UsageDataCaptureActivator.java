@@ -75,7 +75,7 @@ public class UsageDataCaptureActivator extends AbstractUIPlugin implements IStar
                 if (newValue instanceof Boolean)
                     return ((Boolean) newValue).booleanValue();
                 if (newValue instanceof String)
-                    return Boolean.valueOf((String) newValue);
+                    return Boolean.parseBoolean((String) newValue);
                 return false;
             }
 
