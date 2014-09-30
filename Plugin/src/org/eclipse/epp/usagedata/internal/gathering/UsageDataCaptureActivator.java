@@ -164,7 +164,8 @@ public class UsageDataCaptureActivator extends AbstractUIPlugin implements IStar
      */
     public static void logException(String message, Throwable e) {
         synchronized (plugin) {
-            plugin.getLog().log(new Status(IStatus.ERROR, PLUGIN_ID, message, e));
+            System.out.println(e);
+            plugin.getLog().log(new Status(IStatus.ERROR, PLUGIN_ID, message, e == null? new RuntimeException("Logging"): e));
         }
     }
 
