@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <site>
-   <feature url="features/RecommendationTasks_1.2.0.201409292052.jar" id="RecommendationTasks" version="1.2.0.201409292052">
+   <feature url="features/RecommendationTasks_1.2.0.201409292105.jar" id="RecommendationTasks" version="1.2.0.201409292105">
       <category name="tasks"/>
    </feature>
    <category-def name="tasks" label="SomeTasks"/>
