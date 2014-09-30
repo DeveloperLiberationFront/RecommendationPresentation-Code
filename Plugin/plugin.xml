@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.2"?>
 <plugin>
-   <extension-point id="edu.tasks.monitors" name="Usage Data Monitors" schema="schema/org.eclipse.epp.usagedata.gathering.monitors.exsd"/>
+   <extension-point id="edu.tasks.monitors" name="Usage Data Monitors" schema="schema/edu.tasks.monitors.exsd"/>
    <extension-point id="org.eclipse.epp.usagedata.listeners.event" name="Event Listener" schema="schema/org.eclipse.epp.usagedata.listeners.event.exsd"/>
    <extension
          point="org.eclipse.ui.startup">
@@ -24,11 +24,11 @@
    <extension
          point="org.eclipse.ui.commands">
       <category
-            id="org.eclipse.epp.usagedata.gathering.commands.category"
+            id="edu.tasks.commands.category"
             name="Tasks">
       </category>
       <command
-            categoryId="org.eclipse.epp.usagedata.gathering.commands.category"
+            categoryId="edu.tasks.commands.category"
             id="recommendationPresentation.showTasks"
             name="Show Tasks">
       </command>
@@ -50,7 +50,7 @@
                mnemonic="M">
             <command
                   commandId="recommendationPresentation.showTasks"
-                  id="org.eclipse.epp.usagedata.gathering.menus.sampleCommand"
+                  id="edu.tasks.menus.sampleCommand"
                   mnemonic="S">
             </command>
          </menu>
