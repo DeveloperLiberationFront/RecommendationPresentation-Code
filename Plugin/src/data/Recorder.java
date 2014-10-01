@@ -65,7 +65,7 @@ public class Recorder {
     public void dumpRecords() throws Exception {
         Date date = new Date();
         String timeStamp = new Timestamp(date.getTime()).toString();
-        timeStamp = timeStamp.replaceAll(":", ".");
+        timeStamp = timeStamp.replace(':', '.');
         String dirName = Utils.getUserFolder() + File.separator + timeStamp;
 
         File dir = new File(dirName);
