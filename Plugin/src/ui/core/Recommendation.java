@@ -51,6 +51,8 @@ public class Recommendation implements Comparable<Recommendation> {
     private List<String> friendsList;
 
     private List<String> strangersList;
+    
+    private boolean wasLastOneStranger = random.nextBoolean();
 
     @Override
     public boolean equals(Object obj)
@@ -232,9 +234,11 @@ public class Recommendation implements Comparable<Recommendation> {
     }
 
     private void handleFriendOrStrangerCondition() throws URISyntaxException, IOException {
-        //We randomly 
+        //We alternate between using a stranger and using a known person given a random starting point.
+        //This should balance the creation (especially guarenteeing that one of the first two recos will 
+        //be someone known.
         
-        if (random.nextBoolean()) {
+        if (wasLastOneStranger) {
             List<String> friends = getFriendsFile();
             int size = friends.size();
             
@@ -250,6 +254,8 @@ public class Recommendation implements Comparable<Recommendation> {
             this.conditionString = strangers.get(index) + " uses this command.";
             this.conditionShortString += "_stranger";
         }
+        
+        wasLastOneStranger = !wasLastOneStranger;
         
         
     }
