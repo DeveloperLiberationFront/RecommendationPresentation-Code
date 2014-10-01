@@ -213,13 +213,7 @@ public class Recommendation implements Comparable<Recommendation> {
             this.conditionString = "";
         }
         else if (this.condition == CONDITION_PEOPLE_NAME) {
-            List<String> friends = getFriendsFile();
-            int size = friends.size();
-            
-            int randomSeed = random.nextInt(100);
-            int index = random.nextInt(randomSeed + 1) % size;
-
-            this.conditionString = friends.get(index) + " uses this command.";
+            handleFriendOrStrangerCondition();
         }
         else if (this.condition == CONDITION_PEOPLE_NUMBER) {
             int randomSeed = random.nextInt(100);
@@ -237,6 +231,15 @@ public class Recommendation implements Comparable<Recommendation> {
         }
     }
 
+    private void handleFriendOrStrangerCondition() throws URISyntaxException, IOException {
+        List<String> friends = getFriendsFile();
+        int size = friends.size();
+        
+        int index = random.nextInt(size);
+
+        this.conditionString = friends.get(index) + " uses this command.";
+    }
+
     private List<String> getFriendsFile() throws URISyntaxException, IOException {
         // reads in FriendsFile from disk or returns the parsed list.
         if (this.friendsList == null) {
@@ -249,7 +252,7 @@ public class Recommendation implements Comparable<Recommendation> {
                 String line = null;
                 while ((line = br.readLine()) != null) {
                     if (line.startsWith(idStart)) {
-                        friendsList.add(line.substring(4)); // the line starts with 123:
+                        friendsList.add(line.substring(4).trim()); // the line starts with 123:
                     }     
                 }
             } catch (IOException e) {
