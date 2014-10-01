@@ -6,6 +6,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -46,6 +47,8 @@ public class Recommendation implements Comparable<Recommendation> {
     private float rating;
     
     private Random random = new Random();
+
+    private List<String> friendsList;
 
     @Override
     public boolean equals(Object obj)
@@ -195,45 +198,7 @@ public class Recommendation implements Comparable<Recommendation> {
     }
 
     private void computeCondition() {
-        
-        this.setCondition(CONDITION_CONFIDENCE_RATING);
-//        int conditionTotal = (Utils.conditions[0] + Utils.conditions[1] + Utils.conditions[2] + Utils.conditions[3]);
-//
-//        if (conditionTotal % 4 == 0) {
-//            int randomSeed = random.nextInt(100) * random.nextInt(100);
-//            int randomInt = random.nextInt(randomSeed + 1);
-//
-//            this.setCondition(randomInt % 4);
-//            
-//            Utils.conditions[condition]++;
-//        }
-//
-//        else {
-//            Random generator = new Random();
-//            int randomInt = generator.nextInt(100);
-//            randomInt = randomInt % 4;
-//
-//            if (Utils.conditions[randomInt] < Utils.conditions[(randomInt + 1) % 4] ||
-//                    Utils.conditions[randomInt] < Utils.conditions[(randomInt + 2) % 4] ||
-//                    Utils.conditions[randomInt] < Utils.conditions[(randomInt + 3) % 4]) {
-//                this.setCondition(randomInt);
-//            }
-//            else if (Utils.conditions[(randomInt + 1) % 4] < Utils.conditions[(randomInt + 2) % 4] ||
-//                    Utils.conditions[(randomInt + 1) % 4] < Utils.conditions[(randomInt + 3) % 4] ||
-//                    Utils.conditions[(randomInt + 1) % 4] < Utils.conditions[randomInt]) {
-//                this.setCondition((randomInt + 1) % 4);
-//            }
-//            else if (Utils.conditions[(randomInt + 2) % 4] < Utils.conditions[(randomInt + 3) % 4] ||
-//                    Utils.conditions[(randomInt + 2) % 4] < Utils.conditions[(randomInt + 1) % 4] ||
-//                    Utils.conditions[(randomInt + 2) % 4] < Utils.conditions[randomInt]) {
-//                this.setCondition((randomInt + 2) % 4);
-//            }
-//            else {
-//                this.setCondition((randomInt + 3) % 4);
-//            }
-//
-//            Utils.conditions[condition]++;
-//        }
+        this.setCondition(Utils.getParticipantID() % 4);
     }
 
     public String getConditionString() {
@@ -248,7 +213,7 @@ public class Recommendation implements Comparable<Recommendation> {
             this.conditionString = "";
         }
         else if (this.condition == CONDITION_PEOPLE_NAME) {
-            ArrayList<String> friends = readFriendsFile();
+            List<String> friends = getFriendsFile();
             int size = friends.size();
             
             int randomSeed = random.nextInt(100);
@@ -272,23 +237,26 @@ public class Recommendation implements Comparable<Recommendation> {
         }
     }
 
-    private ArrayList<String> readFriendsFile() throws URISyntaxException, IOException {
-        File friendsFile = Utils.getFriendsFile();
+    private List<String> getFriendsFile() throws URISyntaxException, IOException {
+        // reads in FriendsFile from disk or returns the parsed list.
+        if (this.friendsList == null) {
+            File friendsFile = Utils.getFriendsFile();
 
-        ArrayList<String> friends = new ArrayList<String>();
-        try(BufferedReader br = new BufferedReader(new FileReader(friendsFile));)
-        {
-            String line = null;
-            while ((line = br.readLine()) != null) {
-                if (!line.isEmpty())
-                    friends.add(line);
+            friendsList = new ArrayList<String>();
+            try (BufferedReader br = new BufferedReader(new FileReader(friendsFile));)
+            {
+                String idStart = String.format("%03d:", Utils.getParticipantID());
+                String line = null;
+                while ((line = br.readLine()) != null) {
+                    if (line.startsWith(idStart)) {
+                        friendsList.add(line.substring(4)); // the line starts with 123:
+                    }     
+                }
+            } catch (IOException e) {
+                UsageDataCaptureActivator.logException("Problem with friends file", e);
             }
         }
-        catch (IOException e) {
-            throw e;
-        }
-
-        return friends;
+        return friendsList;
     }
 
     public String getConditionShortString() {

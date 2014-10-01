@@ -1,6 +1,7 @@
 package ui.utils;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.URISyntaxException;
@@ -11,6 +12,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
+import java.util.Scanner;
 import java.util.Map.Entry;
 import java.util.TreeSet;
 
@@ -42,7 +45,7 @@ public class Utils {
 
     public static final HashSet<Recommendation> filterList = new HashSet<Recommendation>();
 
-    
+    private static int participantId;
 
     public static int conditions[] = new int[4];
 
@@ -153,6 +156,22 @@ public class Utils {
             UsageDataCaptureActivator.logException("Problem dumping commandUsages", e);
         }
 
+    }
+
+    public static void readInParticipantId() {
+        File file = new File("/pid.txt");
+
+        try (Scanner scanner = new Scanner(file);){
+            String firstLine = scanner.nextLine();
+            participantId = Integer.parseInt(firstLine);
+        } catch (FileNotFoundException | NumberFormatException | NoSuchElementException e) {
+            e.printStackTrace();
+            participantId = 0;
+        }
+    }
+
+    public static int getParticipantID() {
+        return participantId;
     }
 
 }

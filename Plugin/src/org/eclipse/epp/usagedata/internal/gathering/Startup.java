@@ -12,10 +12,14 @@ package org.eclipse.epp.usagedata.internal.gathering;
 
 import org.eclipse.ui.IStartup;
 
+import ui.utils.Utils;
+
 public class Startup implements IStartup {
 
+    @Override
     public void earlyStartup() {
-        // Nothing to do. We just want the bundle to start.
+
+        Utils.readInParticipantId();
     }
 
 }

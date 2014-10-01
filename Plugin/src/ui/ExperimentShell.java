@@ -55,8 +55,6 @@ public class ExperimentShell {
 
     private Label lblNewRecommendations;
 
-    private Button btnHint;
-
     private RecommendationList newRecommendationList;
 
     private Label lblYouMayEnter;
@@ -190,7 +188,6 @@ public class ExperimentShell {
         FontData[] fd2 = lblYouMayEnter.getFont().getFontData();
         fd2[0].setHeight(14);
         font14 = new Font(display, fd1);
-       // lblYouMayEnter.setFont(SWTResourceManager.getFont("Lucida Grande", 14, SWT.NORMAL));
         lblYouMayEnter.setForeground(new Color(this.display, 35, 107, 178));
         lblYouMayEnter.setText("Enter your response here...");
 
@@ -310,6 +307,9 @@ public class ExperimentShell {
 
     public void close() {
         shlTasksrecommendations.dispose();
+        font14.dispose();
+        font16.dispose();
+        font24.dispose();
     }
 
     public void clearRecommendations() {
