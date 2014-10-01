@@ -1,4 +1,5 @@
 /Plugin/bin
+/Plugin/res/friends.txt
 /RecommendationSite/*.jar
 /RecommendationSite/logs.zip
 /RecommendationSite/**/*.jar
