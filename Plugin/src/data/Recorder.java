@@ -1,4 +1,4 @@
-package ui.core;
+package data;
 
 import java.io.File;
 import java.io.PrintWriter;
@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 
+import ui.core.Recommendation;
 import ui.utils.Utils;
 
 public class Recorder {

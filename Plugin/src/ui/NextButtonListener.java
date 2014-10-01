@@ -7,7 +7,7 @@ import org.eclipse.epp.usagedata.internal.gathering.UsageDataCaptureActivator;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 
-import ui.core.Recorder;
+import data.Recorder;
 import ui.core.Task;
 import ui.utils.Utils;
 

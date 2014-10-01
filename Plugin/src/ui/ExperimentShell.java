@@ -29,8 +29,8 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.wb.swt.SWTResourceManager;
 import org.xml.sax.SAXException;
 
+import data.Recorder;
 import ui.core.Recommendation;
-import ui.core.Recorder;
 import ui.core.TaskReader;
 import ui.utils.Utils;
 
