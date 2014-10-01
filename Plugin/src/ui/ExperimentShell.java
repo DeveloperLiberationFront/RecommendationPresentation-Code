@@ -22,17 +22,20 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.wb.swt.SWTResourceManager;
 import org.xml.sax.SAXException;
 
-import data.Recorder;
 import ui.core.Recommendation;
 import ui.core.TaskReader;
 import ui.utils.Utils;
+import data.Recorder;
 
 public class ExperimentShell {
     private static ExperimentShell instance;
@@ -84,6 +87,7 @@ public class ExperimentShell {
             addPanesToShell();
 
             shlTasksrecommendations.open();
+            
         } else {
             shlTasksrecommendations.forceActive();
         }
@@ -180,17 +184,15 @@ public class ExperimentShell {
 
         lblThisIsA = new Label(leftPane, SWT.WRAP);
         lblThisIsA.setLayoutData(new GridData(SWT.LEFT, SWT.FILL, true, true, 2, 1));
-        FontData[] fd = lblThisIsA.getFont().getFontData();
-        fd[0].setHeight(16);
-        font16 = new Font(display, fd1);
-        lblThisIsA.setFont(font16);
+        FontData[] fd2 = lblThisIsA.getFont().getFontData();
+        fd2[0].setHeight(14);
+        font14 = new Font(display, fd2);
+        lblThisIsA.setFont(font14);
         lblThisIsA.setForeground(new Color(this.display, 35, 107, 178));
         lblThisIsA.setText(Utils.taskList.get(Utils.currentTaskNumber).getTaskDetails());
 
         lblYouMayEnter = new Label(leftPane, SWT.NONE);
-        FontData[] fd2 = lblYouMayEnter.getFont().getFontData();
-        fd2[0].setHeight(14);
-        font14 = new Font(display, fd1);
+        lblYouMayEnter.setFont(font14);
         lblYouMayEnter.setForeground(new Color(this.display, 35, 107, 178));
         lblYouMayEnter.setText("Enter your response here...");
 
@@ -228,26 +230,43 @@ public class ExperimentShell {
     }
 
     private void customizeShell() {
-        shlTasksrecommendations.setMaximized(true);
+        //shlTasksrecommendations.setMaximized(true);
         GridLayout gl_shlTasksrecommendations = new GridLayout();
         gl_shlTasksrecommendations.numColumns = 5;
         gl_shlTasksrecommendations.makeColumnsEqualWidth = true;
 
         shlTasksrecommendations.setLayout(gl_shlTasksrecommendations);
 
+        // http://www.java2s.com/Code/Java/SWT-JFace-Eclipse/Preventashellfromclosingprompttheuser.htm
+        shlTasksrecommendations.addListener(SWT.Close, new Listener() {
+            @Override
+            public void handleEvent(Event event) {
+                int style = SWT.APPLICATION_MODAL | SWT.YES | SWT.NO;
+                MessageBox messageBox = new MessageBox(shlTasksrecommendations, style);
+                messageBox.setText("Are you sure you want to quit?");
+                messageBox.setMessage("Are you sure you want to quit?  \n"
+                        + "You have some tasks incomplete.");
+                event.doit = (messageBox.open() == SWT.YES);
+            }
+        });
+
         shlTasksrecommendations.addDisposeListener(new DisposeListener() {
 
             @Override
             public void widgetDisposed(DisposeEvent e) {
                 try {
+                    if (font14 != null)
+                    font14.dispose();
+                    if (font16 != null)
+                    font16.dispose();
+                    if (font24 != null)
+                    font24.dispose();
                     wrapupExperiment();
                 } catch (FileNotFoundException e1) {
                     e1.printStackTrace();
                 } catch (Exception e1) {
                     e1.printStackTrace();
                 }
-                System.out.println("Conditions: " + Utils.conditions[0] + " " + Utils.conditions[1] +
-                        " " + Utils.conditions[2] + " " + Utils.conditions[3]);
                 System.out.println("Experiment Completed");
             }
 
@@ -310,9 +329,7 @@ public class ExperimentShell {
 
     public void close() {
         shlTasksrecommendations.dispose();
-        font14.dispose();
-        font16.dispose();
-        font24.dispose();
+        
     }
 
     public void clearRecommendations() {

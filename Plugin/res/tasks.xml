@@ -59,7 +59,7 @@
 
     <task>
         <text>“Go to github” is a part of a dialog box shown in the app.  Find where the dialog box is made and comment out the listener that responds to the click notification.  
-		Please give the file and the line numbers that you commented out.
+Please give the file and the line numbers that you commented out.
 </text>
         <recommendation>org.eclipse.search.ui.openFileSearchPage</recommendation>
         <recommendation>org.eclipse.jdt.ui.edit.text.java.toggle.comment</recommendation>
@@ -117,15 +117,16 @@
     </task>
 
     <task>
-        <text>This is a debugging task. Debugging on Android emulator is a pain. To make debugging easier, we will use a different project named ‘ComicReaderDebugging’. This project will run the classes as Java application on the computer instead of Android emulator. Switch to this project.
+        <text>Debugging on Android emulator is a pain. To make debugging easier, we will use a different project named ‘ComicReaderDebugging’. This project will run the classes as a Java application instead of on an Android emulator. Switch to this project.
 
-		Open the file BugComic.java. Notice that this file has a main method. This allows you to run/debug this file as a Java application. The method display() is supposed to display an array of comic urls. [it doesn't currently].  WITHOUT MODIFYING ANY CODE, find the URL string for 212th item in the array.  You may run the code as much as you wish.
+Open the file BugComic.java. The method display() is supposed to display an array of comic urls. (it doesn't currently)  WITHOUT MODIFYING ANY CODE, find the URL string for 212th item in the array.  You may run the code as much as you wish.
 	</text>
         <recommendation>org.eclipse.ui.navigate.openResource</recommendation>
         <recommendation>org.eclipse.jdt.ui.navigate.open.type</recommendation>
         <recommendation>org.eclipse.debug.ui.commands.ToggleBreakpoint</recommendation>
         <recommendation>org.eclipse.debug.ui.commands.RunToLine</recommendation>
         <recommendation>org.eclipse.jdt.debug.ui.commands.Display</recommendation>
+		<recommendation>org.eclipse.jdt.debug.ui.commands.Inspect</recommendation>
         <recommendation>org.eclipse.debug.ui.commands.StepInto</recommendation>
         <recommendation>org.eclipse.debug.ui.commands.StepOver</recommendation>
         <recommendation>org.eclipse.debug.ui.commands.StepReturn</recommendation>
@@ -140,6 +141,7 @@
         <recommendation>org.eclipse.debug.ui.commands.ToggleBreakpoint</recommendation>
         <recommendation>org.eclipse.debug.ui.commands.RunToLine</recommendation>
         <recommendation>org.eclipse.jdt.debug.ui.commands.Display</recommendation>
+		<recommendation>org.eclipse.jdt.debug.ui.commands.Inspect</recommendation>
         <recommendation>org.eclipse.debug.ui.commands.StepInto</recommendation>
         <recommendation>org.eclipse.debug.ui.commands.StepOver</recommendation>
         <recommendation>org.eclipse.debug.ui.commands.StepReturn</recommendation>
