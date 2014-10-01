@@ -91,6 +91,10 @@ public class Utils {
         return getResourceFile("res/friends.txt");
     }
 
+    public static File getStrangersFile() {
+        return getResourceFile("res/strangers.txt");
+    }
+
     public static RecommendationBundle getRecommendationsBundle(String id) {
           File xmlFile = getResourceFile("res/recommendations/"+id+"/reco.xml");
           File htmlFile = getResourceFile("res/recommendations/"+id+"/reco.html");

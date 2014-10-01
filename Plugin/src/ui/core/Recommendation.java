@@ -50,6 +50,8 @@ public class Recommendation implements Comparable<Recommendation> {
 
     private List<String> friendsList;
 
+    private List<String> strangersList;
+
     @Override
     public boolean equals(Object obj)
     {
@@ -73,9 +75,7 @@ public class Recommendation implements Comparable<Recommendation> {
     @Override
     public int hashCode()
     {
-        final int prime = 31;
-        int result = 1;
-        return prime * result + ((id == null) ? 0 : id.hashCode());
+        return (id == null) ? 0 : id.hashCode();
     }
 
     @Override
@@ -232,34 +232,62 @@ public class Recommendation implements Comparable<Recommendation> {
     }
 
     private void handleFriendOrStrangerCondition() throws URISyntaxException, IOException {
-        List<String> friends = getFriendsFile();
-        int size = friends.size();
+        //We randomly 
         
-        int index = random.nextInt(size);
+        if (random.nextBoolean()) {
+            List<String> friends = getFriendsFile();
+            int size = friends.size();
+            
+            int index = random.nextInt(size);
 
-        this.conditionString = friends.get(index) + " uses this command.";
+            this.conditionString = friends.get(index) + " uses this command.";
+        } else {
+            List<String> strangers = getStrangersFile();
+            int size = strangers.size();
+            
+            int index = random.nextInt(size);
+            
+            this.conditionString = strangers.get(index) + " uses this command.";
+            this.conditionShortString += "_stranger";
+        }
+        
+        
+    }
+
+    private List<String> getStrangersFile() {
+        if (this.strangersList == null) {
+            File strangersFile = Utils.getStrangersFile();
+            //dividing by 100 to get the section number
+            strangersList = readFriendsOrStrangersFile(strangersFile, Utils.getParticipantID()/100);
+        }
+        return this.strangersList;
     }
 
     private List<String> getFriendsFile() throws URISyntaxException, IOException {
         // reads in FriendsFile from disk or returns the parsed list.
         if (this.friendsList == null) {
             File friendsFile = Utils.getFriendsFile();
-
-            friendsList = new ArrayList<String>();
-            try (BufferedReader br = new BufferedReader(new FileReader(friendsFile));)
-            {
-                String idStart = String.format("%03d:", Utils.getParticipantID());
-                String line = null;
-                while ((line = br.readLine()) != null) {
-                    if (line.startsWith(idStart)) {
-                        friendsList.add(line.substring(4).trim()); // the line starts with 123:
-                    }     
-                }
-            } catch (IOException e) {
-                UsageDataCaptureActivator.logException("Problem with friends file", e);
-            }
+            friendsList = readFriendsOrStrangersFile(friendsFile, Utils.getParticipantID());
         }
         return friendsList;
+    }
+
+    private List<String> readFriendsOrStrangersFile(File file, int rowNum) {
+        List<String> list = new ArrayList<String>();
+        try (BufferedReader br = new BufferedReader(new FileReader(file));)
+        {
+            
+            String idStart = String.format("%03d:", rowNum);
+            String line = null;
+            while ((line = br.readLine()) != null) {
+                if (line.startsWith(idStart)) {
+                    list.add(line.substring(4).trim()); // the line starts with 123:
+                }     
+            }
+        } catch (IOException e) {
+            UsageDataCaptureActivator.logException("Problem with friends or stranger file" + file, e);
+        }
+        return list;
     }
 
     public String getConditionShortString() {
