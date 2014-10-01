@@ -71,19 +71,22 @@ public class ExperimentShell {
     /**
      * @wbp.parser.entryPoint
      */
-    public void open() throws ParserConfigurationException, SAXException,
-            IOException, URISyntaxException {
-        display = PlatformUI.getWorkbench().getDisplay();
+    public void open() throws ParserConfigurationException, SAXException, IOException, URISyntaxException {
+        if (shlTasksrecommendations == null || shlTasksrecommendations.isDisposed()) {
+            display = PlatformUI.getWorkbench().getDisplay();
 
-        initiateExperiment();
+            initiateExperiment();
 
-        shlTasksrecommendations = new Shell(display);
-        shlTasksrecommendations.setText("Tasks and Recommendations");
+            shlTasksrecommendations = new Shell(display);
+            shlTasksrecommendations.setText("Tasks and Recommendations");
 
-        customizeShell();
-        addPanesToShell();
+            customizeShell();
+            addPanesToShell();
 
-        shlTasksrecommendations.open();
+            shlTasksrecommendations.open();
+        } else {
+            shlTasksrecommendations.forceActive();
+        }
     }
 
     private void addPanesToShell() {
@@ -256,9 +259,9 @@ public class ExperimentShell {
     }
 
     public static ExperimentShell getInstance() {
-        if (instance == null || instance.isDisposed())
+        if (instance == null || instance.isDisposed()) {
             instance = new ExperimentShell();
-
+        }
         return instance;
     }
 
