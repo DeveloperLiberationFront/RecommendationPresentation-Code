@@ -171,7 +171,7 @@ public class SQLiteDatabaseLink {
     }
 
     public void sawUsage(int participantId, int taskNumber, String commandId) {
-        String sqlTableQuery = "INSERT INTO Usage ( " +
+        String sqlTableQuery = "INSERT INTO Usages ( " +
                 "participant_id, " +
                 "task_id," +
                 "command_id) VALUES (?,?,?) ";

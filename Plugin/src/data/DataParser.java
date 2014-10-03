@@ -63,6 +63,7 @@ public class DataParser {
             
             for (File participant : participantFiles) {
                 try {
+                    System.out.println("Beginning "+participant.getName());
                     parseParticipant(new ZipFile(participant));
                 } catch (Exception e) {
                     e.printStackTrace();
