@@ -19,9 +19,6 @@ public class SQLiteDatabaseLink {
         createTables();
     }
 
-    // One table of clicks, recos, responses, usage
-    // Columns PID, Task, [thing]
-
     private final void open() throws DatabaseException
     {
         try
@@ -65,7 +62,7 @@ public class SQLiteDatabaseLink {
                 "response_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 "participant_id INTEGER, " +
                 "task_id INTEGER," +
-                "tool_id TEXT) ";
+                "command_id TEXT) ";
 
         executeStatementWithNoResults(makePreparedStatement(sqlTableQuery));
     }
@@ -129,6 +126,86 @@ public class SQLiteDatabaseLink {
         }
         return retVal;
 
+    }
+
+    public void sawClick(int participantId, int taskNumber, String commandId, String recoCondition) {
+        String sqlTableQuery = "INSERT INTO Clicks ( " +
+                "participant_id, " +
+                "task_id," +
+                "command_id," +
+                "reco_type) VALUES (?,?,?,?) ";
+
+        
+        try (PreparedStatement ps = makePreparedStatement(sqlTableQuery);){
+            
+            ps.setInt(1, participantId);
+            ps.setInt(2, taskNumber);
+            ps.setString(3, commandId);
+            ps.setString(4, recoCondition);
+            
+            executeStatementWithNoResults(ps);
+        } catch (DatabaseException | SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void sawRecommendation(int participantId, int taskNumber, String commandId, String recoCondition) {
+        String sqlTableQuery = "INSERT INTO Recommendations ( " +
+                "participant_id, " +
+                "task_id," +
+                "command_id," +
+                "reco_type) VALUES (?,?,?,?) ";
+
+        
+        try (PreparedStatement ps = makePreparedStatement(sqlTableQuery);){
+            
+            ps.setInt(1, participantId);
+            ps.setInt(2, taskNumber);
+            ps.setString(3, commandId);
+            ps.setString(4, recoCondition);
+            
+            executeStatementWithNoResults(ps);
+        } catch (DatabaseException | SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void sawUsage(int participantId, int taskNumber, String commandId) {
+        String sqlTableQuery = "INSERT INTO Usage ( " +
+                "participant_id, " +
+                "task_id," +
+                "command_id) VALUES (?,?,?) ";
+
+        
+        try (PreparedStatement ps = makePreparedStatement(sqlTableQuery);){
+            
+            ps.setInt(1, participantId);
+            ps.setInt(2, taskNumber);
+            ps.setString(3, commandId);
+            
+            executeStatementWithNoResults(ps);
+        } catch (DatabaseException | SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void sawResponse(int participantId, int taskNumber, String response) {
+        String sqlTableQuery = "INSERT INTO Responses ( " +
+                "participant_id, " +
+                "task_id," +
+                "response) VALUES (?,?,?) ";
+
+        
+        try (PreparedStatement ps = makePreparedStatement(sqlTableQuery);){
+            
+            ps.setInt(1, participantId);
+            ps.setInt(2, taskNumber);
+            ps.setString(3, response);
+            
+            executeStatementWithNoResults(ps);
+        } catch (DatabaseException | SQLException e) {
+            e.printStackTrace();
+        }
     }
 
 }

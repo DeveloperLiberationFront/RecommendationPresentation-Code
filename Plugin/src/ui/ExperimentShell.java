@@ -64,8 +64,6 @@ public class ExperimentShell {
 
     private Font font24;
 
-    private Font font16;
-
     private Font font14;
 
     private ExperimentShell() {
@@ -257,8 +255,6 @@ public class ExperimentShell {
                 try {
                     if (font14 != null)
                     font14.dispose();
-                    if (font16 != null)
-                    font16.dispose();
                     if (font24 != null)
                     font24.dispose();
                     wrapupExperiment();
