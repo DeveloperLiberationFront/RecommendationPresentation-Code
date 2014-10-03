@@ -4,3 +4,4 @@
 /RecommendationSite/*.jar
 /RecommendationSite/logs.zip
 /RecommendationSite/**/*.jar
+*.sqlite
