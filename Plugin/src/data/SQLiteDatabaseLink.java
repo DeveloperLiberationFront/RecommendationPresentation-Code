@@ -9,19 +9,19 @@ import java.sql.SQLException;
 public class SQLiteDatabaseLink {
 
     public final static String databaseLoc = "./recodata.sqlite";
+
     private Connection connection;
-    
+
     public SQLiteDatabaseLink() throws DatabaseException
     {
         System.out.println("Creating database at location: " + databaseLoc);
         open();
         createTables();
     }
-    
-        //One table of clicks, recos, responses, usage
-    //Columns PID, Task, [thing]
-    
-    
+
+    // One table of clicks, recos, responses, usage
+    // Columns PID, Task, [thing]
+
     private final void open() throws DatabaseException
     {
         try
@@ -33,12 +33,10 @@ public class SQLiteDatabaseLink {
             // exists and create a new sqlite database if it does not exist
             this.connection = DriverManager.getConnection("jdbc:sqlite:" + databaseLoc);
 
-        }
-        catch (ClassNotFoundException e)
+        } catch (ClassNotFoundException e)
         {
             throw new DatabaseException("Problem with Class.forName in SQLiteDatabase", e);
-        }
-        catch (SQLException e)
+        } catch (SQLException e)
         {
             throw new DatabaseException(e);
         }
@@ -56,11 +54,42 @@ public class SQLiteDatabaseLink {
         String sqlTableQuery = "CREATE TABLE IF NOT EXISTS Responses ( " +
                 "response_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 "participant_id INTEGER, " +
-                "task_id INTEGER) ";
+                "task_id INTEGER," +
+                "response TEXT) ";
 
-            // execute the query
-            PreparedStatement statement = makePreparedStatement(sqlTableQuery);
-            executeStatementWithNoResults(statement);
+        executeStatementWithNoResults(makePreparedStatement(sqlTableQuery));
+    }
+
+    private void createUsagesTable() throws DatabaseException {
+        String sqlTableQuery = "CREATE TABLE IF NOT EXISTS Usages ( " +
+                "response_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                "participant_id INTEGER, " +
+                "task_id INTEGER," +
+                "tool_id TEXT) ";
+
+        executeStatementWithNoResults(makePreparedStatement(sqlTableQuery));
+    }
+
+    private void createRecosTable() throws DatabaseException {
+        String sqlTableQuery = "CREATE TABLE IF NOT EXISTS Recommendations ( " +
+                "response_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                "participant_id INTEGER, " +
+                "task_id INTEGER," +
+                "command_id TEXT," +
+                "reco_type TEXT) ";
+
+        executeStatementWithNoResults(makePreparedStatement(sqlTableQuery));
+    }
+
+    private void createClicksTable() throws DatabaseException {
+        String sqlTableQuery = "CREATE TABLE IF NOT EXISTS Clicks ( " +
+                "response_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                "participant_id INTEGER, " +
+                "task_id INTEGER," +
+                "command_id TEXT," +
+                "reco_type TEXT) ";
+
+        executeStatementWithNoResults(makePreparedStatement(sqlTableQuery));
     }
 
     protected PreparedStatement makePreparedStatement(String statementQuery) throws DatabaseException
@@ -68,10 +97,9 @@ public class SQLiteDatabaseLink {
         try
         {
             return connection.prepareStatement(statementQuery);
-        }
-        catch (SQLException e)
+        } catch (SQLException e)
         {
-            throw new DatabaseException("Problem compiling SQL to preparedStatement",e);
+            throw new DatabaseException("Problem compiling SQL to preparedStatement", e);
         }
     }
 
@@ -81,10 +109,9 @@ public class SQLiteDatabaseLink {
         {
             statement.execute();
             statement.close();
-        }
-        catch (SQLException e)
+        } catch (SQLException e)
         {
-            throw new DatabaseException("Problem executing statement ",e);
+            throw new DatabaseException("Problem executing statement ", e);
         }
 
     }
@@ -94,10 +121,9 @@ public class SQLiteDatabaseLink {
         ResultSet retVal = null;
         try
         {
-            retVal = statement.executeQuery();      
+            retVal = statement.executeQuery();
 
-        }
-        catch (SQLException e)
+        } catch (SQLException e)
         {
             throw new DatabaseException("Problem with query", e);
         }
@@ -105,21 +131,6 @@ public class SQLiteDatabaseLink {
 
     }
 
-    private void createUsagesTable() {
-        // TODO Auto-generated method stub
-        
-    }
-
-    private void createRecosTable() {
-        // TODO Auto-generated method stub
-        
-    }
-
-    private void createClicksTable() {
-        // TODO Auto-generated method stub
-        
-    }
-    
 }
 
 class DatabaseException extends Exception {
@@ -133,6 +144,5 @@ class DatabaseException extends Exception {
     public DatabaseException(Throwable arg0) {
         super(arg0);
     }
-    
-}
 
+}
