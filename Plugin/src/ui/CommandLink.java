@@ -446,7 +446,7 @@ public class CommandLink extends Composite {
     private void setConditions(Recommendation recommendation) {
         if (recommendation.getCondition() != Recommendation.CONDITION_CONFIDENCE_RATING)
             this.setText(recommendation.getLabel(),
-                    recommendation.getConditionString());
+                    recommendation.getUserFacingString());
         else {
             this.setLabel(recommendation.getLabel());
             this.setRating(recommendation.getRating());

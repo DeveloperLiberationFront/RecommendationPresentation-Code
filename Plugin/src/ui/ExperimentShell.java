@@ -7,7 +7,12 @@ import java.util.HashSet;
 
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.ScrolledComposite;
+import org.eclipse.swt.events.ControlAdapter;
+import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.FocusEvent;
@@ -16,6 +21,7 @@ import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -50,7 +56,7 @@ public class ExperimentShell {
 
     private Label lblTaskNumber;
 
-    private Label lblThisIsA;
+    private Label lblTaskDetails;
 
     private Text textbox;
 
@@ -66,6 +72,8 @@ public class ExperimentShell {
 
     private Font font14;
 
+    private ScrolledComposite taskDetailsWrapper;
+
     private ExperimentShell() {
     }
 
@@ -76,13 +84,16 @@ public class ExperimentShell {
         if (shlTasksrecommendations == null || shlTasksrecommendations.isDisposed()) {
             display = PlatformUI.getWorkbench().getDisplay();
 
-            initiateExperiment();
+            resetBeforeExperiment();
 
             shlTasksrecommendations = new Shell(display);
             shlTasksrecommendations.setText("Tasks and Recommendations");
 
             customizeShell();
             addPanesToShell();
+            
+            getUserId();
+            getConsent();
 
             shlTasksrecommendations.open();
             
@@ -177,17 +188,32 @@ public class ExperimentShell {
         font24 = new Font(display, fd1);
         lblTaskNumber.setFont(font24);
         lblTaskNumber.setForeground(new Color(this.display, 35, 107, 178));
-        lblTaskNumber.setText("Task 1 of 16   ");
+        setTaskNumber(1, Utils.taskList.size());
 
-
-        lblThisIsA = new Label(leftPane, SWT.WRAP);
-        lblThisIsA.setLayoutData(new GridData(SWT.LEFT, SWT.FILL, true, true, 2, 1));
-        FontData[] fd2 = lblThisIsA.getFont().getFontData();
+        // see http://www.java2s.com/Code/Java/SWT-JFace-Eclipse/CreateaScrolledCompositewithwrappingcontent.htm
+        taskDetailsWrapper = new ScrolledComposite(leftPane, SWT.V_SCROLL);
+        taskDetailsWrapper.setLayoutData(new GridData(SWT.LEFT, SWT.FILL, true, true, 2, 1));
+        
+        lblTaskDetails = new Label(taskDetailsWrapper, SWT.WRAP);
+        //lblTaskDetails.setLayoutData(new GridData(SWT.LEFT, SWT.FILL, true, true, 2, 1));
+        FontData[] fd2 = lblTaskDetails.getFont().getFontData();
         fd2[0].setHeight(14);
         font14 = new Font(display, fd2);
-        lblThisIsA.setFont(font14);
-        lblThisIsA.setForeground(new Color(this.display, 35, 107, 178));
-        lblThisIsA.setText(Utils.taskList.get(Utils.currentTaskNumber).getTaskDetails());
+        lblTaskDetails.setFont(font14);
+        lblTaskDetails.setForeground(new Color(this.display, 35, 107, 178));
+        lblTaskDetails.setText(Utils.taskList.get(Utils.currentTaskNumber).getTaskDetails());
+        
+        taskDetailsWrapper.setContent(lblTaskDetails);
+        taskDetailsWrapper.setExpandHorizontal(true);
+        taskDetailsWrapper.setExpandVertical(true);
+        // the min size won't automatically get updated unless we add a listener
+        taskDetailsWrapper.addControlListener(new ControlAdapter() {
+            @Override
+            public void controlResized(ControlEvent e) {
+              fixTaskLabelSize();
+            }
+          });
+        //detailsWrapper.setMinSize(SWT.DEFAULT, SWT.DEFAULT);
 
         lblYouMayEnter = new Label(leftPane, SWT.NONE);
         lblYouMayEnter.setFont(font14);
@@ -278,12 +304,45 @@ public class ExperimentShell {
             instance = new ExperimentShell();
         }
         return instance;
-    }
+    } 
 
-    private void initiateExperiment() throws ParserConfigurationException, SAXException, IOException, URISyntaxException {
+    private void resetBeforeExperiment() throws ParserConfigurationException, SAXException, IOException, URISyntaxException {
         Utils.resetGlobals();
         TaskReader tr = new TaskReader();
         Utils.taskList = tr.getTaskList();
+        
+        
+    }
+
+    private void getConsent() {
+        int style = SWT.APPLICATION_MODAL | SWT.YES | SWT.NO;
+        MessageBox messageBox = new MessageBox(shlTasksrecommendations, style);
+        messageBox.setText("Do you consent?");
+        messageBox.setMessage("Click yes if you consent to have your data sent to a third "
+                + "party for ");
+        boolean didUserConsent = (messageBox.open() == SWT.YES);
+        System.out.println("Consented: "+didUserConsent);
+    }
+
+    private void getUserId() {
+        InputDialog inputBox = new InputDialog(shlTasksrecommendations, "Unity ID",
+                "Please enter your Unity id.  Incorrectly typing this may result in your lab "
+                        + "excercise not being graded.", "", null) {
+            @Override
+            protected void createButtonsForButtonBar(Composite parent) {
+                createButton(parent, IDialogConstants.OK_ID,
+                        IDialogConstants.OK_LABEL, true); // this should be saved to getOkayButton()
+                                                          // , but that is not implemented
+            }
+        };
+
+        inputBox.setBlockOnOpen(true);
+        inputBox.open();
+        
+        String schoolID = inputBox.getValue();
+        System.out.println("user id is " + schoolID);
+        
+        Utils.assignUserNumericId(schoolID);
     }
 
     private void wrapupExperiment() throws Exception {
@@ -292,8 +351,10 @@ public class ExperimentShell {
 
     }
 
-    public Label getTaskLabel() {
-        return lblThisIsA;
+    
+    public void setTaskDescription(String str) {
+        lblTaskDetails.setText(str);
+        fixTaskLabelSize();
     }
 
     public Label getTaskNumberLabel() {
@@ -318,9 +379,9 @@ public class ExperimentShell {
     public Button getBtnNext() {
         return btnNext;
     }
-
-    public Text getTextBox() {
-        return textbox;
+    
+    public void setAnswerBoxText(String str) {
+        textbox.setText(str);
     }
 
     public void close() {
@@ -330,5 +391,19 @@ public class ExperimentShell {
 
     public void clearRecommendations() {
         newRecommendationList.clear();
+    }
+
+    private void fixTaskLabelSize() {
+        Rectangle r = taskDetailsWrapper.getClientArea();
+          taskDetailsWrapper.setMinSize(lblTaskDetails.computeSize(r.width,
+              SWT.DEFAULT));
+    }
+
+    public void setTaskNumber(int n, int total) {
+        this.lblTaskNumber.setText("Task " + n + " of " + total);
+    }
+
+    public String getCurrentAnswer() {
+        return this.textbox.getText();
     }
 }

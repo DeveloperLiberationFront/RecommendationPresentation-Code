@@ -22,7 +22,7 @@ public class NextButtonListener implements SelectionListener {
     @Override
     public void widgetSelected(SelectionEvent e) {
         
-        String response = shell.getTextBox().getText();
+        String response = shell.getCurrentAnswer();
         
         if ("".equals(response) || "Enter your answer here...".equals(response)) {
             return;
@@ -62,9 +62,9 @@ public class NextButtonListener implements SelectionListener {
         
         HintButtonListener.showRecommendations(shell);
         
-        shell.getTaskNumberLabel().setText("Task " + (Utils.currentTaskNumber + 1) + " of " + Utils.taskList.size());
-        shell.getTaskLabel().setText(Utils.taskList.get(Utils.currentTaskNumber).getTaskDetails());
-        shell.getTextBox().setText("");
+        shell.setTaskNumber(Utils.currentTaskNumber + 1, Utils.taskList.size());
+        shell.setTaskDescription(Utils.taskList.get(Utils.currentTaskNumber).getTaskDetails());
+        shell.setAnswerBoxText("");
 
         if (Utils.currentTaskNumber == (Utils.taskList.size() - 1))
             shell.getBtnNext().setText("Finish");

@@ -15,6 +15,7 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.TreeSet;
 
 import org.eclipse.core.runtime.FileLocator;
@@ -94,6 +95,10 @@ public class Utils {
     public static File getStrangersFile() {
         return getResourceFile("res/strangers.txt");
     }
+    
+    public static File getUserMappingFile(){
+        return getResourceFile("res/userMapping.txt");
+    }
 
     public static RecommendationBundle getRecommendationsBundle(String id) {
           File xmlFile = getResourceFile("res/recommendations/"+id+"/reco.xml");
@@ -140,29 +145,9 @@ public class Utils {
         return retVal == null ? Collections.<String>emptyList() : retVal;
     }
 
-    public static void dumpCommandsUsed(String fileName) {
-        try (PrintWriter out = new PrintWriter(fileName);) {
-            out.println("<experiment>");
-            for (Entry<Integer, List<String>> entry: commandUsage.entrySet()) {
-                out.println("<task>");
-                out.println("<number>" + entry.getKey() + "</number>");
-                out.println("<usedcommands>");
-                for (String str : entry.getValue()) {
-                    out.println("<id>" + str + "</id>");
-                }
-                out.println("</usedcommands>");
-                out.println("</task>");
-            }
-            out.println("</experiment>");
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-            UsageDataCaptureActivator.logException("Problem dumping commandUsages", e);
-        }
-
-    }
-
-    public static void readInParticipantId() {
+    
+    @Deprecated
+    private static void readInParticipantId() {
         File file = new File("/pid.txt");
 
         try (Scanner scanner = new Scanner(file);){
@@ -176,6 +161,20 @@ public class Utils {
 
     public static int getParticipantID() {
         return participantId;
+    }
+
+    public static Set<Entry<Integer, List<String>>> getCommandsEntrySet() {
+        return commandUsage.entrySet();
+    }
+
+    /**
+     * A user types in a school id or something similiar.  
+     * This function maps them to their pre-assigned id.
+     * @param schoolID
+     */
+    public static void assignUserNumericId(String schoolID) {
+        // TODO Auto-generated method stub
+        
     }
 
 }

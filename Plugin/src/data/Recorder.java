@@ -6,10 +6,19 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map.Entry;
+
+import org.eclipse.epp.usagedata.internal.gathering.UsageDataCaptureActivator;
 
 import ui.core.Recommendation;
 import ui.utils.Utils;
 
+/**
+ * Queues up the data and then stores it to xml
+ * @author KevinLubick
+ *
+ */
 public class Recorder {
 
     private static Recorder instance;
@@ -76,53 +85,74 @@ public class Recorder {
 
         // dump the clicks
         String fileNameClicks = dirName + File.separator + "clicks.xml";
-        PrintWriter out = new PrintWriter(fileNameClicks);
-        out.println("<experiment>");
-        for (Integer task : clicks.keySet()) {
-            out.println("<task>");
-            out.println("<number>" + task + "</number>");
-            for (Recommendation reco : clicks.get(task)) {
-                out.println("<recommendation>");
-                out.println("<commandid>" + reco.getId() + "</commandid>");
-                out.println("<condition>" + reco.getConditionShortString() + "</condition>");
-                out.println("</recommendation>");
+        try (PrintWriter out = new PrintWriter(fileNameClicks);) {
+            out.println("<experiment>");
+            for (Integer task : clicks.keySet()) {
+                out.println("<task>");
+                out.println("<number>" + task + "</number>");
+                for (Recommendation reco : clicks.get(task)) {
+                    out.println("<recommendation>");
+                    out.println("<commandid>" + reco.getId() + "</commandid>");
+                    out.println("<condition>" + reco.getConditionShortString() + "</condition>");
+                    out.println("</recommendation>");
+                }
+                out.println("</task>");
             }
-            out.println("</task>");
+            out.println("</experiment>");
         }
-        out.println("</experiment>");
-        out.close();
 
         // dump everything that was recommended to the user
         String fileNameRecos = dirName + File.separator + "recos.xml";
-        out = new PrintWriter(fileNameRecos);
-        out.println("<experiment>");
-        for (Integer task : recommendations.keySet()) {
-            out.println("<task>");
-            out.println("<number>" + task + "</number>");
-            for (Recommendation reco : recommendations.get(task)) {
-                out.println("<recommendation>");
-                out.println("<commandid>" + reco.getId() + "</commandid>");
-                out.println("<condition>" + reco.getConditionShortString() + "</condition>");
-                out.println("</recommendation>");
+        try (PrintWriter out = new PrintWriter(fileNameRecos);) {
+            out.println("<experiment>");
+            for (Integer task : recommendations.keySet()) {
+                out.println("<task>");
+                out.println("<number>" + task + "</number>");
+                for (Recommendation reco : recommendations.get(task)) {
+                    out.println("<recommendation>");
+                    out.println("<commandid>" + reco.getId() + "</commandid>");
+                    out.println("<condition>" + reco.getConditionShortString() + "</condition>");
+                    out.println("</recommendation>");
+                }
+                out.println("</task>");
             }
-            out.println("</task>");
+            out.println("</experiment>");
         }
-        out.println("</experiment>");
-        out.close();
 
         // dump all commands the user used
         String fileNameUsage = dirName + File.separator + "usage.xml";
         
-        Utils.dumpCommandsUsed(fileNameUsage);
+        dumpCommandsUsed(fileNameUsage);
 
         // dump user's responses to the tasks
         String fileNameResponses = dirName + File.separator + "responses.xml";
-        out = new PrintWriter(fileNameResponses);
-        out.println("<experiment>");
-        for (String response : responses) {
-            out.println("<response>" + response + "</response>");
+        try (PrintWriter out = new PrintWriter(fileNameResponses);) {
+            out.println("<experiment>");
+            for (String response : responses) {
+                out.println("<response>" + response + "</response>");
+            }
+            out.println("</experiment>");
         }
-        out.println("</experiment>");
-        out.close();
+    }
+    
+    private static void dumpCommandsUsed(String fileName) {
+        try (PrintWriter out = new PrintWriter(fileName);) {
+            out.println("<experiment>");
+            for (Entry<Integer, List<String>> commandsUsedThisTask: Utils.getCommandsEntrySet()) {
+                out.println("<task>");
+                out.println("<number>" + commandsUsedThisTask.getKey() + "</number>");
+                out.println("<usedcommands>");
+                for (String commandId : commandsUsedThisTask.getValue()) {
+                    out.println("<id>" + commandId + "</id>");
+                }
+                out.println("</usedcommands>");
+                out.println("</task>");
+            }
+            out.println("</experiment>");
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            UsageDataCaptureActivator.logException("Problem dumping commandUsages", e);
+        }
     }
 }

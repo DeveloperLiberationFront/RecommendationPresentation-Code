@@ -40,7 +40,7 @@ public class Recommendation implements Comparable<Recommendation> {
 
     private int goodness = 0;
 
-    private String conditionString;
+    private String userFacingString;
 
     private String conditionShortString;
 
@@ -203,16 +203,16 @@ public class Recommendation implements Comparable<Recommendation> {
         this.setCondition(Utils.getParticipantID() % 4);
     }
 
-    public String getConditionString() {
-        return this.conditionString;
+    public String getUserFacingString() {
+        return this.userFacingString;
     }
 
     public void addCondition() throws URISyntaxException, IOException {
-        if (conditionString != null)
+        if (userFacingString != null)
             return; // condition already added
         computeCondition();
         if (this.condition == CONDITION_NOTHING) {
-            this.conditionString = "";
+            this.userFacingString = "";
         }
         else if (this.condition == CONDITION_PEOPLE_NAME) {
             handleFriendOrStrangerCondition();
@@ -222,10 +222,10 @@ public class Recommendation implements Comparable<Recommendation> {
             int index = random.nextInt(randomSeed + 1) % 30;
             int number = index + 13;
 
-            this.conditionString = number + " people use this command.";
+            this.userFacingString = number + " people use this command.";
         }
         else if (this.condition == CONDITION_CONFIDENCE_RATING) {
-            this.conditionString = "";
+            this.userFacingString = "";
             float var = (random.nextInt() % 4);
             var = Math.abs(var);
             var = (float) (var / 2 + 3.5);
@@ -235,7 +235,7 @@ public class Recommendation implements Comparable<Recommendation> {
 
     private void handleFriendOrStrangerCondition() throws URISyntaxException, IOException {
         //We alternate between using a stranger and using a known person given a random starting point.
-        //This should balance the creation (especially guarenteeing that one of the first two recos will 
+        //This should balance the creation (especially guaranteeing that one of the first two recos will 
         //be someone known.
         
         if (wasLastOneStranger) {
@@ -244,14 +244,14 @@ public class Recommendation implements Comparable<Recommendation> {
             
             int index = random.nextInt(size);
 
-            this.conditionString = friends.get(index) + " uses this command.";
+            this.userFacingString = friends.get(index) + " uses this command.";
         } else {
             List<String> strangers = getStrangersFile();
             int size = strangers.size();
             
             int index = random.nextInt(size);
             
-            this.conditionString = strangers.get(index) + " uses this command.";
+            this.userFacingString = strangers.get(index) + " uses this command.";
             this.conditionShortString += "_stranger";
         }
         
