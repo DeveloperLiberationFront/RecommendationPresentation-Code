@@ -7,6 +7,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 import java.util.Scanner;
@@ -16,12 +17,14 @@ import java.util.zip.ZipOutputStream;
 import javax.mail.Authenticator;
 import javax.mail.Message;
 import javax.mail.MessagingException;
+import javax.mail.Multipart;
 import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
 
 import ui.utils.Utils;
 
@@ -99,9 +102,10 @@ public class Emailer {
         try {
 
             Message message = new MimeMessage(session);
+            message.setSentDate(new Date());
             message.setFrom(new InternetAddress(emailUsername));
             message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(DESTINATION_EMAIL_ADDRESS));
-            message.setSubject("Reco Study Results " + Utils.getUserName() + " " + Utils.getParticipantID());
+            message.setSubject("Reco Study Results " + Utils.getUserName() + " " + Utils.getParticipantID()+" "+Utils.didUserConsent());
 
             MimeBodyPart text = new MimeBodyPart();
             text.setText("Find the results attached");
@@ -109,6 +113,12 @@ public class Emailer {
             MimeBodyPart zipFilePart = new MimeBodyPart();
             zipFilePart.attachFile(zipFile);
 
+            Multipart mp = new MimeMultipart();
+            mp.addBodyPart(text);
+            mp.addBodyPart(zipFilePart);
+            
+            message.setContent(mp);
+            
             Transport.send(message);
         } catch (MessagingException e) {
             e.printStackTrace();

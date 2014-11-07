@@ -342,7 +342,7 @@ public class ExperimentShell {
         inputBox.open();
         
         String userName = inputBox.getValue();
-        System.out.println("user id is " + userName);
+        System.out.println("user name is " + userName);
         
         Utils.assignUserNumericId(userName);
         
