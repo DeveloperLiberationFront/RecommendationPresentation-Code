@@ -5,3 +5,4 @@
 /RecommendationSite/logs.zip
 /RecommendationSite/**/*.jar
 *.sqlite
+Plugin/res/userMapping.txt
