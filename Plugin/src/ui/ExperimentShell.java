@@ -343,6 +343,8 @@ public class ExperimentShell {
         System.out.println("user id is " + schoolID);
         
         Utils.assignUserNumericId(schoolID);
+        
+        System.out.println("This is " + Utils.getParticipantID());
     }
 
     private void wrapupExperiment() throws Exception {

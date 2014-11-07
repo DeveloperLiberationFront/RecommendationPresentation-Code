@@ -3,7 +3,6 @@ package ui.utils;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -12,9 +11,9 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
-import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -45,6 +44,8 @@ public class Utils {
     public static final HashSet<Recommendation> currentTaskRecos = new HashSet<Recommendation>();
 
     public static final HashSet<Recommendation> filterList = new HashSet<Recommendation>();
+    
+    private static Map<String,Integer> userMap = null;
 
     private static int participantId;
 
@@ -174,7 +175,29 @@ public class Utils {
      */
     public static void assignUserNumericId(String schoolID) {
         // TODO Auto-generated method stub
+        if (userMap == null) {
+            userMap = readInUserMap();
+        }
+        Integer integer = userMap.get(schoolID);
+        participantId = integer == null? 0 : integer.intValue();
+    }
+
+    private static Map<String, Integer> readInUserMap() {
+        File file = getUserMappingFile();
+        Map<String, Integer> retVal = new HashMap<>();
+
+        try (Scanner scanner = new Scanner(file);){
+            while (scanner.hasNextLine()) {
+                String line = scanner.nextLine();
+                String[] sections = line.split(":");
+                if (sections.length != 2) continue;
+                retVal.put(sections[0], Integer.valueOf(sections[1]));
+            }
+        } catch (FileNotFoundException | NumberFormatException | NoSuchElementException e) {
+            e.printStackTrace();
+        }
         
+        return retVal;
     }
 
 }
