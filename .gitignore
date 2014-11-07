@@ -6,3 +6,4 @@
 /RecommendationSite/**/*.jar
 *.sqlite
 Plugin/res/userMapping.txt
+Plugin/res/email.ini

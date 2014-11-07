@@ -53,6 +53,8 @@ public class Utils {
 
     private static boolean didUserConsent;
 
+    private static String userName;
+
     public static void resetGlobals() {
         conditions[0] = 0;
         conditions[1] = 0;
@@ -99,6 +101,10 @@ public class Utils {
         return getResourceFile("res/strangers.txt");
     }
     
+    public static File getEmailFile() {
+        return getResourceFile("res/email.ini");
+    }
+
     public static File getUserMappingFile(){
         return getResourceFile("res/userMapping.txt");
     }
@@ -147,6 +153,10 @@ public class Utils {
         List<String> retVal = Utils.commandUsage.get(Utils.currentTaskNumber);
         return retVal == null ? Collections.<String>emptyList() : retVal;
     }
+    
+    public static String getUserName() {
+        return userName;
+    }
 
     public static boolean didUserConsent() {
         return didUserConsent;
@@ -161,16 +171,17 @@ public class Utils {
     }
 
     /**
-     * A user types in a school id or something similiar.  
+     * A user types in a school id or something similar.  
      * This function maps them to their pre-assigned id.
-     * @param schoolID
+     * @param userName
      */
-    public static void assignUserNumericId(String schoolID) {
-        // TODO Auto-generated method stub
+    public static void assignUserNumericId(String enteredUserName) {
+        userName = enteredUserName;
+        
         if (userMap == null) {
             userMap = readInUserMap();
         }
-        Integer integer = userMap.get(schoolID);
+        Integer integer = userMap.get(userName);
         participantId = integer == null? 0 : integer.intValue();
     }
 

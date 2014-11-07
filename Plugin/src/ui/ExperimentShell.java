@@ -41,6 +41,7 @@ import org.xml.sax.SAXException;
 import ui.core.Recommendation;
 import ui.core.TaskReader;
 import ui.utils.Utils;
+import data.Emailer;
 import data.Recorder;
 
 public class ExperimentShell {
@@ -340,16 +341,19 @@ public class ExperimentShell {
         inputBox.setBlockOnOpen(true);
         inputBox.open();
         
-        String schoolID = inputBox.getValue();
-        System.out.println("user id is " + schoolID);
+        String userName = inputBox.getValue();
+        System.out.println("user id is " + userName);
         
-        Utils.assignUserNumericId(schoolID);
+        Utils.assignUserNumericId(userName);
         
         System.out.println("This is " + Utils.getParticipantID());
     }
 
     private void wrapupExperiment() throws Exception {
         Recorder.getInstance().dumpRecords();
+        
+        Emailer.emailRecords();
+        
         Utils.experimentRunning = false;
 
     }
