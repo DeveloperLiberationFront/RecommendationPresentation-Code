@@ -126,12 +126,27 @@ public class Emailer {
     }
 
     public static void emailRecords() {
+        Thread thread = new Thread(new Runnable() {
+            
+            @Override
+            public void run() {
+                try {
+                    File zipFile = zipRecords();
+                    emailer.sendRecords(zipFile);
+                    System.out.println("Email sent");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });      
+        
+        thread.start();
+
         try {
-            File zipFile = zipRecords();
-            emailer.sendRecords(zipFile);
-        } catch (IOException e) {
+            Thread.sleep(1000);//wait for one seconds to give the email a head start in sending.
+        } catch (InterruptedException e) {
             e.printStackTrace();
-        }
+        }     
     }
 
     // http://www.avajava.com/tutorials/lessons/how-do-i-zip-a-directory-and-all-its-contents.html
@@ -140,6 +155,8 @@ public class Emailer {
         File output = new File("zippedRecords.zip");
         if (!output.createNewFile()) {
             System.err.println("Could not create file " + output);
+        } else {
+            System.out.println("Zipping to " + output.getAbsolutePath());
         }
         List<File> fileList = new ArrayList<File>();
         getAllFiles(directoryToZip, fileList);
@@ -184,7 +201,6 @@ public class Emailer {
             // to the directory being zipped, so chop off the rest of the path
             String zipFilePath = file.getCanonicalPath().substring(directoryToZip.getCanonicalPath().length() + 1,
                     file.getCanonicalPath().length());
-            System.out.println("Writing '" + zipFilePath + "' to zip file");
             ZipEntry zipEntry = new ZipEntry(zipFilePath);
             zos.putNextEntry(zipEntry);
 
