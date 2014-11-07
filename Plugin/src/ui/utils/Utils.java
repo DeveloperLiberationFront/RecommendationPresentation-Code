@@ -51,6 +51,8 @@ public class Utils {
 
     public static int conditions[] = new int[4];
 
+    private static boolean didUserConsent;
+
     public static void resetGlobals() {
         conditions[0] = 0;
         conditions[1] = 0;
@@ -146,18 +148,8 @@ public class Utils {
         return retVal == null ? Collections.<String>emptyList() : retVal;
     }
 
-    
-    @Deprecated
-    private static void readInParticipantId() {
-        File file = new File("/pid.txt");
-
-        try (Scanner scanner = new Scanner(file);){
-            String firstLine = scanner.nextLine();
-            participantId = Integer.parseInt(firstLine);
-        } catch (FileNotFoundException | NumberFormatException | NoSuchElementException e) {
-            e.printStackTrace();
-            participantId = 0;
-        }
+    public static boolean didUserConsent() {
+        return didUserConsent;
     }
 
     public static int getParticipantID() {
@@ -198,6 +190,10 @@ public class Utils {
         }
         
         return retVal;
+    }
+
+    public static void setConsent(boolean b) {
+       didUserConsent = b;        
     }
 
 }

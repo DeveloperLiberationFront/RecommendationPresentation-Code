@@ -322,6 +322,7 @@ public class ExperimentShell {
                 + "party for ");
         boolean didUserConsent = (messageBox.open() == SWT.YES);
         System.out.println("Consented: "+didUserConsent);
+        Utils.setConsent(didUserConsent);
     }
 
     private void getUserId() {
