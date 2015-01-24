@@ -127,7 +127,6 @@ public class Emailer {
 
     public static void emailRecords() {
         Thread thread = new Thread(new Runnable() {
-            
             @Override
             public void run() {
                 try {
@@ -154,7 +153,7 @@ public class Emailer {
         File directoryToZip = new File(Utils.getUserFolder());
         File output = new File("zippedRecords.zip");
         if (!output.createNewFile()) {
-            System.err.println("Could not create file " + output);
+            System.err.println("Could not create file " + output.getAbsolutePath()+" maybe it already exists???");
         } else {
             System.out.println("Zipping to " + output.getAbsolutePath());
         }
