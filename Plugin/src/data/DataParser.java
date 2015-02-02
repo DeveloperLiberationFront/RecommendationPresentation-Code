@@ -60,6 +60,11 @@ public class DataParser {
                 }
             });
             
+            if (participantFiles == null) {
+                System.err.println("No files found");
+                return;
+            }
+            
             for (File participant : participantFiles) {
                 try {
                     System.out.println("Beginning "+participant.getName());

@@ -166,6 +166,11 @@ public class Emailer {
 
     public static void getAllFiles(File dir, List<File> fileList) {
         File[] files = dir.listFiles();
+        
+        if (files == null) {
+            return;
+        }
+        
         for (File file : files) {
             fileList.add(file);
             if (file.isDirectory()) {

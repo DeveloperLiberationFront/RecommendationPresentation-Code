@@ -438,7 +438,7 @@ public class CommandLink extends Composite {
         return recommendation;
     }
 
-    public void setRecommendation(Recommendation recommendation) {
+    public final void setRecommendation(Recommendation recommendation) {
         this.recommendation = recommendation;
 
     }

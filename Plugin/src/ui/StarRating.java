@@ -141,9 +141,9 @@ public class StarRating extends Canvas {
         for (final Star star : stars) {
             star.draw(gc, x, y);
             if (orientation == SWT.VERTICAL) {
-                y += sizeOfStars.equals(SIZE.BIG) ? SIZE_BIG : SIZE_SMALL;
+                y += sizeOfStars == SIZE.BIG ? SIZE_BIG : SIZE_SMALL;
             } else {
-                x += sizeOfStars.equals(SIZE.BIG) ? SIZE_BIG : SIZE_SMALL;
+                x += sizeOfStars == SIZE.BIG ? SIZE_BIG : SIZE_SMALL;
             }
         }
     }
@@ -348,7 +348,7 @@ public class StarRating extends Canvas {
      *                </ul>
      * 
      */
-    public void setMaxNumberOfStars(final int maxNumberOfStars) {
+    public final void setMaxNumberOfStars(final int maxNumberOfStars) {
         this.maxNumberOfStars = maxNumberOfStars;
         reinitStars();
     }
@@ -359,7 +359,7 @@ public class StarRating extends Canvas {
         }
         stars.clear();
         for (int i = 0; i < maxNumberOfStars; i++) {
-            if (sizeOfStars.equals(SIZE.BIG)) {
+            if (sizeOfStars == SIZE.BIG) {
                 stars.add(Star.initBig(this));
             } else {
                 stars.add(Star.initSmall(this));

@@ -59,7 +59,7 @@ public class ExtensionIdToBundleMapper {
         hookListeners();
     }
 
-    void hookListeners() {
+    final void hookListeners() {
         Platform.getExtensionRegistry().addRegistryChangeListener(listener);
     }
 
