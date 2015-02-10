@@ -247,6 +247,7 @@ public class Recommendation implements Comparable<Recommendation> {
             int index = random.nextInt(size);
 
             this.userFacingString = friends.get(index) + " uses this command.";
+            this.conditionShortString = conditionShortString+ ":"+friends.get(index);
         } else {
             List<String> strangers = getStrangersFile();
             int size = strangers.size();
@@ -254,7 +255,7 @@ public class Recommendation implements Comparable<Recommendation> {
             int index = random.nextInt(size);
             
             this.userFacingString = strangers.get(index) + " uses this command.";
-            this.conditionShortString += "_stranger";
+            this.conditionShortString = conditionShortString+ "_stranger:"+strangers.get(index);
         }
         
         wasLastOneStranger = !wasLastOneStranger;
