@@ -116,6 +116,11 @@ Please give the file and the line numbers that you commented out.
         <recommendation>org.eclipse.jdt.ui.edit.text.java.search.write.access.in.hierarchy</recommendation>
     </task>
 
+	<task>
+        <text>Right-click on the ComicReader project.  Select Close project.  We will not be using ComicReader any more.  You may type whatever you want in the box below.  Perhaps a haiku about Eclipse?
+	</text>
+    </task>
+	
     <task>
         <text>Debugging on Android emulator is a pain. To make debugging easier, we will use a different project named ‘ComicReaderDebugging’. This project will run the classes as a Java application instead of on an Android emulator. Switch to this project.
 
@@ -135,7 +140,7 @@ Open the file BugComic.java. The method display() is supposed to display an arra
 
     <task>
         <text>This is also a debugging task. Open the file GoGetARoomie.java and notice that this file has also a main method. This allows you to run/debug this file as a Java application. Run it as a Java application. The application crashes and throws a NumberFormatException on line 37. In 140 characters or less, why was the exception thrown? Fix the code so the exception is not thrown anymore.  Copy and paste your fixed code into the box below.
-</text>
+	</text>
         <recommendation>org.eclipse.ui.navigate.openResource</recommendation>
         <recommendation>org.eclipse.jdt.ui.navigate.open.type</recommendation>
         <recommendation>org.eclipse.debug.ui.commands.ToggleBreakpoint</recommendation>
