@@ -297,6 +297,9 @@ public class ExperimentShell {
     }
 
     public boolean isDisposed() {
+        if (shlTasksrecommendations == null) {
+            return true;
+        }
         return shlTasksrecommendations.isDisposed();
     }
 
