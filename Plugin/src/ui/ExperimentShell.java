@@ -322,8 +322,7 @@ public class ExperimentShell {
         int style = SWT.APPLICATION_MODAL | SWT.YES | SWT.NO;
         MessageBox messageBox = new MessageBox(shlTasksrecommendations, style);
         messageBox.setText("Do you consent?");
-        messageBox.setMessage("Click yes if you consent to have your data sent to a third "
-                + "party for ");
+        messageBox.setMessage("Click yes if you consent to have your data sent to Kevin Lubick, a researcher, in accordance with the IRB form you have read?");
         boolean didUserConsent = (messageBox.open() == SWT.YES);
         System.out.println("Consented: "+didUserConsent);
         Utils.setConsent(didUserConsent);
