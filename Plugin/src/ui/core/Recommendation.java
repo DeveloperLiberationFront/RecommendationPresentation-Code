@@ -218,6 +218,7 @@ public class Recommendation implements Comparable<Recommendation> {
             handleFriendOrStrangerCondition();
         }
         else if (this.condition == CONDITION_PEOPLE_NUMBER) {
+            random.setSeed(id.hashCode());
             int randomSeed = random.nextInt(100);
             int index = random.nextInt(randomSeed + 1) % 30;
             int number = index + 13;
