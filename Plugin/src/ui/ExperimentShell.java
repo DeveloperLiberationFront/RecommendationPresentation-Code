@@ -131,14 +131,14 @@ public class ExperimentShell {
 
         lblNewRecommendations = new Label(rightPaneTop, SWT.NONE);
         lblNewRecommendations.setFont(SWTResourceManager.getFont("Lucida Grande", 16, SWT.NORMAL));
-        lblNewRecommendations.setText("New Eclipse Command Recommendations");
+        lblNewRecommendations.setText("Eclipse Command Recommendations");
 
         Composite holderTop = new Composite(rightPaneTop, SWT.NONE);
         holderTop.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
         holderTop.setLayout(new FillLayout());
 
         newRecommendationList = new RecommendationList(holderTop, SWT.NONE);
-        newRecommendationList.setToolTipText("New commands will be recommended here as you complete the tasks.");
+        newRecommendationList.setToolTipText("Potentially useful commands will be recommended here as you complete the tasks.");
 
         newRecommendationList.setRecommendationListener(new CommandLinkAdapter() {
             @Override

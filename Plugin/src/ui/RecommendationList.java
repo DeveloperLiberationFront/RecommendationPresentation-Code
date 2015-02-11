@@ -44,6 +44,12 @@ public class RecommendationList extends ScrolledComposite {
         preferredWidth = parent.getSize().x;
         this.setMinSize(holder.computeSize(SWT.DEFAULT, SWT.DEFAULT));
     }
+    
+    @Override
+    public void setToolTipText(String string) {
+        super.setToolTipText(string);
+        holder.setToolTipText(string);
+    }
 
     public void setRecommendationListener(MouseListener recommendationListener) {
         this.recommendationListener = recommendationListener;
