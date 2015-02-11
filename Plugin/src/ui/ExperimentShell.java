@@ -19,6 +19,7 @@ import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.FocusListener;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.Rectangle;
@@ -75,6 +76,8 @@ public class ExperimentShell {
 
     private ScrolledComposite taskDetailsWrapper;
 
+    protected static Cursor handCursor;
+
     private ExperimentShell() {
     }
 
@@ -85,6 +88,7 @@ public class ExperimentShell {
         if (shlTasksrecommendations == null || shlTasksrecommendations.isDisposed()) {
             display = PlatformUI.getWorkbench().getDisplay();
 
+            handCursor = display.getSystemCursor(SWT.CURSOR_HAND);
             resetBeforeExperiment();
 
             shlTasksrecommendations = new Shell(display);

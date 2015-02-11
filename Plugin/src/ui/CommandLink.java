@@ -7,6 +7,7 @@ import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.GC;
@@ -111,6 +112,7 @@ public class CommandLink extends Composite {
 
         this.setBackgroundMode(SWT.INHERIT_DEFAULT);
         this.setLayout(new GridLayout(2, false));
+        this.setCursor(ExperimentShell.handCursor);
 
         buildGreenArrow();
         buildLabel();
