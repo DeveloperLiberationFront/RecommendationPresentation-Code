@@ -178,11 +178,19 @@ public class Utils {
     public static void assignUserNumericId(String enteredUserName) {
         userName = enteredUserName;
         
+        Integer integer = getUserMap().get(userName);
+        participantId = integer == null? 0 : integer.intValue();
+    }
+    
+    public static boolean doesUserExist(String enteredUserName){
+        return getUserMap().containsKey(enteredUserName);
+    }
+
+    private static Map<String, Integer> getUserMap() {
         if (userMap == null) {
             userMap = readInUserMap();
         }
-        Integer integer = userMap.get(userName);
-        participantId = integer == null? 0 : integer.intValue();
+        return userMap;
     }
 
     private static Map<String, Integer> readInUserMap() {

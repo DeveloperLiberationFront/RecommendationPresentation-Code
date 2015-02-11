@@ -350,6 +350,24 @@ public class ExperimentShell {
         String userName = inputBox.getValue();
         System.out.println("user name is " + userName);
         
+        if (!Utils.doesUserExist(userName)) {
+            inputBox = new InputDialog(shlTasksrecommendations, "Unity ID",
+                    "Unity id "+userName +" not recognized.  Please try again.", "", null) {
+                @Override
+                protected void createButtonsForButtonBar(Composite parent) {
+                    createButton(parent, IDialogConstants.OK_ID,
+                            IDialogConstants.OK_LABEL, true); // this should be saved to getOkayButton()
+                                                              // , but that is not implemented
+                }
+            };
+            
+            inputBox.setBlockOnOpen(true);
+            inputBox.open();
+            
+            userName = inputBox.getValue();
+            System.out.println("user name is " + userName);
+        }
+        
         Utils.assignUserNumericId(userName);
         
         System.out.println("This is " + Utils.getParticipantID());
