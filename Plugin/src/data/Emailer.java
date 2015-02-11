@@ -151,7 +151,11 @@ public class Emailer {
     // http://www.avajava.com/tutorials/lessons/how-do-i-zip-a-directory-and-all-its-contents.html
     private static File zipRecords() throws IOException {
         File directoryToZip = new File(Utils.getUserFolder());
-        File output = new File("zippedRecords.zip");
+        String userName = Utils.getUserName();
+        if (userName == null || userName.isEmpty()) {
+            userName = "BLANK";
+        }
+        File output = new File(userName+".zip");
         if (!output.createNewFile()) {
             System.err.println("Could not create file " + output.getAbsolutePath()+" maybe it already exists???");
         } else {
