@@ -23,9 +23,10 @@ public class DataParser {
     public static final String dateStringOfStudy = "2014-10-02";
     public static final String[] dirsToParse = 
             new String[]{
-        "C:\\Users\\KevinLubick\\Downloads\\data\\2nd Section\\",
-        "C:\\Users\\KevinLubick\\Downloads\\data\\3rd Section\\",
-        "C:\\Users\\KevinLubick\\Downloads\\data\\4th Section\\"
+        "C:\\Users\\KevinLubick\\Downloads\\Recommendation\\1st Section",
+        "C:\\Users\\KevinLubick\\Downloads\\Recommendation\\2nd Section",
+        "C:\\Users\\KevinLubick\\Downloads\\Recommendation\\3rd Section",
+        "C:\\Users\\KevinLubick\\Downloads\\Recommendation\\4th Section"
         };
     private static SQLiteDatabaseLink db;
     
@@ -56,7 +57,7 @@ public class DataParser {
             File[] participantFiles = dir.listFiles(new FilenameFilter() {
                 @Override
                 public boolean accept(File arg0, String arg1) {
-                    return !arg1.startsWith("1") && arg1.endsWith("zip"); // 1 means broken data
+                    return arg1.endsWith("zip");
                 }
             });
             
@@ -73,6 +74,7 @@ public class DataParser {
                     e.printStackTrace();
                 }
             }
+            System.out.println("done");
         }
        
     }
@@ -87,13 +89,16 @@ public class DataParser {
             ZipEntry entry = entries.nextElement();
             
             String folderName = entry.getName(); 
-            if (folderName.endsWith(lastFolderName+"/clicks.xml")) {
+            if (!folderName.contains(lastFolderName)) {
+                continue;
+            }
+            if (folderName.endsWith("clicks.xml")) {
                 handleClicks(zipFile.getInputStream(entry));
-            } else if (folderName.endsWith(lastFolderName+"/recos.xml")) {
+            } else if (folderName.endsWith("recos.xml")) {
                 handleRecos(zipFile.getInputStream(entry));
-            } else if (folderName.endsWith(lastFolderName+"/responses.xml")) {
+            } else if (folderName.endsWith("responses.xml")) {
                 handleResponses(zipFile.getInputStream(entry));
-            } else if (folderName.endsWith(lastFolderName+"/usage.xml")) {
+            } else if (folderName.endsWith("usage.xml")) {
                 handleUsages(zipFile.getInputStream(entry));
             }
         }
@@ -118,21 +123,29 @@ public class DataParser {
             ZipEntry entry = entries.nextElement();
             
             String folderName = entry.getName();
-            int dateLoc = folderName.lastIndexOf("2014-10-02");
+            int dateLoc = folderName.lastIndexOf("2015-");
             if (dateLoc == -1) continue;
-            folderName = folderName.substring(dateLoc, 
-                            folderName.lastIndexOf('/'));
-            
+            int lastIndexOfSlash = folderName.lastIndexOf('/');
+            if (lastIndexOfSlash == -1 || lastIndexOfSlash <= dateLoc) {
+                lastIndexOfSlash = folderName.lastIndexOf('\\');
+            }
+            folderName = folderName.substring(dateLoc, lastIndexOfSlash);
             entryNames.add(folderName);
         }
         
         String newestFolderName = entryNames.peek();
+        System.out.println(newestFolderName);
         return newestFolderName;
     }
     
     private static void handleResponses(InputStream inputStream) throws IOException {
         try {
-            xmlReader.parse(inputStream, new ResponsesHandler());
+            ResponsesHandler handler = new ResponsesHandler();
+            xmlReader.parse(inputStream, handler);
+            if (handler.currentTaskNumber < 10) {
+                System.err.println("Warning... only "+handler.currentTaskNumber +
+                        " tasks done by participant " + participantId);
+            }
         } catch (SAXException e) {
             System.err.println("Problem with responses on participant " + participantId);
             e.printStackTrace();
